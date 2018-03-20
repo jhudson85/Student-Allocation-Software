@@ -30,9 +30,9 @@ public class Controller {
         this.view = view;
         this.frame = view.getFrame();
         this.main = view.getMainPage();
-        this.studentPanel = view.getStudentPage();
         main.addClassListener(new AddClassListener());
         main.addStudentListener(new AddStudentListener());
+        
     }
     
     class AddClassListener implements ActionListener{
@@ -49,6 +49,15 @@ public class Controller {
     class AddStudentListener implements ActionListener{
         public void actionPerformed(ActionEvent e) {
             view.addStudent();
+            studentPanel = view.getStudentPage();
+            studentPanel.submitButtonListener(new SubmitStudentListener());
         }
+    }
+    
+    class SubmitStudentListener implements ActionListener{
+        public void actionPerformed(ActionEvent e) { 
+            studentPanel.submitStudent();
+        }
+        
     }
 }

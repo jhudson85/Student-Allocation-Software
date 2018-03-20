@@ -16,6 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import studentallocationsoftware.Util;
 import studentallocationsoftware.model.Model;
 
 /**
@@ -129,5 +130,30 @@ public class StudentPage extends JPanel{
     
     public void submitButtonListener(ActionListener listener){
         submitBtn.addActionListener(listener);
+    }
+    
+    public void submitStudent(){
+        String firstName = firstNameField.getText();
+        String lastName = lastNameField.getText();
+        String studentNumber = studentNumberField.getText();
+        if(firstName.length() > 0 && lastName.length() > 0 && studentNumber.length() == 8){
+            if(Util.isAlpha(firstName) && Util.isAlpha(lastName) && Util.isNumber(studentNumber)){
+                if(designBox.isSelected() || reportBox.isSelected() || testingBox.isSelected() || implementationBox.isSelected()){
+                    //Create a new Student
+                    System.out.println("You have added a new student!");
+                    
+                }
+                else{
+                    System.out.println("Please select at least one preference!");
+                }
+                
+            }
+            else{
+                System.out.println("Please only use letters for names and numbers for student numbers");
+            }
+        }
+        else{
+            System.out.println("Please enter first name and last name with at least 1 letter and student number with 8 numbers.");
+        }
     }
 }
