@@ -17,12 +17,12 @@ public class Student {
     private String studentNumber;
     private int classNumber;
     
-    public Student(boolean[] preferences, String firstName, String lastName, String studentNumber, int classNumber){
+    public Student(boolean[] preferences, String firstName, String lastName, String studentNumber){
         this.preferences = preferences;
         this.firstName = firstName;
         this.lastName = lastName;
         this.studentNumber = studentNumber;
-        this.classNumber = classNumber;
+        //this.classNumber = classNumber;
     }
     
      public boolean[] getPreferences() {

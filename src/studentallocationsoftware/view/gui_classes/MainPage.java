@@ -10,6 +10,7 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemListener;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -75,6 +76,7 @@ public class MainPage extends JPanel {
         
         boxModel = new DefaultComboBoxModel();
         dropDown = new JComboBox(boxModel);
+        boxModel.addElement("<Please create a class>");
         dropDown.setPreferredSize(defaultDimension);
         classDropDownPanel.add(dropDown);
         buttonPanel.add(classDropDownPanel, c);
@@ -164,13 +166,20 @@ public class MainPage extends JPanel {
         editStuBtn.addActionListener(listener);
     }
     
+    public void dropDownListener(ItemListener listener){
+        dropDown.addItemListener(listener);
+    }
+    
     
     public void updateDropDown(){
         boxModel.removeAllElements();
-        int numOfClasses = model.getNumberClasses();
+        int numOfClasses = model.getClassList().size();
         String[] classNames = new String[numOfClasses];
         for(int i = 1;i < numOfClasses + 1; i++){
             boxModel.addElement(new String("Class " + i));
+        }
+        if(numOfClasses == 0){
+            boxModel.addElement("<Please create a class>");
         }
     }
     

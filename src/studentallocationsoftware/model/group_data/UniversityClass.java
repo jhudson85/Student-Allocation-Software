@@ -19,5 +19,15 @@ public class UniversityClass {
     
     public UniversityClass(int classNumber){
         this.classNumber = classNumber;
+        this.studentList = new ArrayList();
+        this.groupList = new ArrayList();
+    }
+    
+    public void addStudent(Student student){
+        studentList.add(student);
+    }
+    
+    public void removeStudent(Student student){
+        studentList.remove(student);
     }
 }

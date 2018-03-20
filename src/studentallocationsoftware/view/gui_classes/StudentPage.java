@@ -13,6 +13,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -132,7 +133,7 @@ public class StudentPage extends JPanel{
         submitBtn.addActionListener(listener);
     }
     
-    public void submitStudent(){
+    public String[] submitStudent(){
         String firstName = firstNameField.getText();
         String lastName = lastNameField.getText();
         String studentNumber = studentNumberField.getText();
@@ -140,20 +141,22 @@ public class StudentPage extends JPanel{
             if(Util.isAlpha(firstName) && Util.isAlpha(lastName) && Util.isNumber(studentNumber)){
                 if(designBox.isSelected() || reportBox.isSelected() || testingBox.isSelected() || implementationBox.isSelected()){
                     //Create a new Student
-                    System.out.println("You have added a new student!");
+                    JOptionPane.showMessageDialog(this, "You have added a new student!");
                     
+                    return new String[]{Boolean.toString(designBox.isSelected()), Boolean.toString(reportBox.isSelected()), Boolean.toString(testingBox.isSelected()), Boolean.toString(implementationBox.isSelected()), firstName, lastName, studentNumber};
                 }
                 else{
-                    System.out.println("Please select at least one preference!");
+                    JOptionPane.showMessageDialog(this, "Please select at least one preference!");
                 }
                 
             }
             else{
-                System.out.println("Please only use letters for names and numbers for student numbers");
+                JOptionPane.showMessageDialog(this, "Please only use letters for names and numbers for student numbers");
             }
         }
         else{
-            System.out.println("Please enter first name and last name with at least 1 letter and student number with 8 numbers.");
+            JOptionPane.showMessageDialog(this, "Please enter first name and last name with at least 1 letter and student number with 8 numbers.");
         }
+        return null;
     }
 }
