@@ -30,4 +30,16 @@ public class UniversityClass {
     public void removeStudent(Student student){
         studentList.remove(student);
     }
+    
+    public ArrayList<Student> getStudentList(){
+        return studentList;
+    }
+    
+    public void addGroup(Group g){
+        groupList.add(g);
+    }
+    
+    public ArrayList<Group> getGroupList(){
+        return groupList;
+    }
 }

@@ -25,6 +25,7 @@ import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import studentallocationsoftware.model.Model;
+import studentallocationsoftware.model.group_data.Student;
 
 
 public class MainPage extends JPanel {
@@ -52,6 +53,14 @@ public class MainPage extends JPanel {
         setLayout(new FlowLayout());
         defaultDimension = new Dimension(250, 30);
         this.model = model;
+    }
+    
+    public void updateList(int classIndex){
+        listModel.removeAllElements();
+        for(Student s: model.getClassList().get(classIndex).getStudentList()){
+            listModel.addElement(s.getFirstName() + " " + s.getLastName() + " - " + s.getStudentNumber());
+            
+        }
     }
     
 
