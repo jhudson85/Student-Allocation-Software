@@ -11,7 +11,7 @@ import java.util.ArrayList;
  *
  * @author Jack
  */
-public class UniversityClass {
+public class UniversityClass{
     ArrayList<Group> groupList;
     ArrayList<Student> studentList;
     int groupSize;
@@ -38,6 +38,10 @@ public class UniversityClass {
     
     public void addGroup(Group g){
         groupList.add(g);
+    }
+    
+    public void removeAllGroupElements(){
+        groupList.clear();
     }
     
     public ArrayList<Group> getGroupList(){

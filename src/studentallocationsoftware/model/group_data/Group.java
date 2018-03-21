@@ -11,11 +11,10 @@ import java.util.ArrayList;
  *
  * @author Jack
  */
-public class Group {
+public class Group implements Comparable<Group>{
     private ArrayList<Student> studentList;
     private int groupNumber;
     private int programSkill, reportSkill, designSkill, testingSkill = 0;
-
     
     public Group(int groupNumber){
         this.groupNumber = groupNumber;
@@ -78,5 +77,17 @@ public class Group {
     public int totalSkillPoints(){
         return programSkill + reportSkill + designSkill + testingSkill;
     }
+
+    public int compareTo(Group other) {
+        int res = other.totalSkillPoints() - this.totalSkillPoints();
+        return res;
+    }
     
+    public int getGroupNumber(){
+        return groupNumber;
+    }
+    
+    public ArrayList<Student> getStudentList(){
+        return studentList;
+    }
 }

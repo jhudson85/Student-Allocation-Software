@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
+import java.util.Collections;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import studentallocationsoftware.Util;
@@ -87,9 +88,9 @@ public class Controller {
                 Student student = new Student(preferences, firstName, lastName, studentNumber);
                 
                 //REMOVE this
-                for(int i = 0; i < 30; i++){
+                //for(int i = 0; i < 30; i++){
                 model.getClassList().get(selectedClass - 1).addStudent(student);
-                }
+                //}
                 view.changeDisplay();
                 main.updateList(selectedClass - 1);
             }
@@ -117,31 +118,69 @@ public class Controller {
             String input = JOptionPane.showInputDialog(main, "Please enter an appropriate group size (2-30)", "");
             if(Util.isNumber(input)){
                 int groupSize = Integer.valueOf(input);
+                //Gets the currently selected class to be sorted
                 UniversityClass uniClass = model.getClassList().get(selectedClass - 1);
+                //Gets the students in that class
                 ArrayList<Student> studentList = uniClass.getStudentList();
-                if(groupSize > 1 && groupSize <= studentList.size()){
+                //Sort the students by the number total number of prefered skills that they have. (Ascending order)
+                Collections.sort(studentList);
+                
+                //Group sizes must be between one and less than or equal to half of the class size
+                if(groupSize > 1 && groupSize <= studentList.size() / 2){
+                    //Calculate the number of groups that needs to be created
                     int numOfGroups = studentList.size() / groupSize;
+                    
+                    //Clear any existing groups and then create new groups
+                    uniClass.removeAllGroupElements();
                     for(int i = 0; i < numOfGroups; i++){
                         uniClass.addGroup(new Group(i));
                     }
                     for(Student student:studentList){
-                        for(Group g: uniClass.getGroupList()){
-                            if(g.getProgramSkill() == 0){
-                                g.addStudent(student);
-                            }
-                            else if(g.getDesignSkill() == 0){
-                                g.addStudent(student);
-                            }
-                            else if(g.getReportSkill() == 0){
-                                g.addStudent(student);
-                            }
-                            else if(g.getReportSkill() == 0){
-                                g.addStudent(student);
-                            }
+                        //Attempt to put a student into a group that requires a skill they have.
+                        boolean placed = groupByRequiredSkill(student, uniClass);
+                        //If they are not put into a group put them into a group which has the least number of skilled members overall.
+                        if(!placed){
+                            Collections.sort(uniClass.getGroupList());
+                            uniClass.getGroupList().get(0).addStudent(student);
+                        }
+                    }
+                    
+                    //Test data please remove
+                    for(Group g: uniClass.getGroupList()){
+                        System.out.println("group number: " + g.getGroupNumber());
+                        for(Student s: g.getStudentList()){
+                            System.out.println(s.getFirstName() + " " + s.getLastName() + " - " + s.getStudentNumber());
                         }
                     }
                 }
             }
+        }
+        
+        /*
+        *Attempt to put a student into a group if that group does not have a student with that preference and
+        *that student has the required preference.
+        *@return Whether the student has been placed into a group.
+        */
+        private boolean groupByRequiredSkill(Student student, UniversityClass uniClass){
+            boolean[] prefs = student.getPreferences();
+            for(Group g: uniClass.getGroupList()){
+                            if(g.getProgramSkill() == 0 && prefs[3]){
+                                g.addStudent(student);
+                                return true;
+                            }
+                            else if(g.getDesignSkill() == 0 && prefs[0]){
+                                g.addStudent(student);
+                                return true;
+                            }
+                            else if(g.getReportSkill() == 0 && prefs[1]){
+                                g.addStudent(student);
+                                return true;
+                            }
+                            else if(g.getReportSkill() == 0 && prefs[2]){
+                                g.addStudent(student);
+                            }
+                        }
+            return false;
         }
     }
 }
