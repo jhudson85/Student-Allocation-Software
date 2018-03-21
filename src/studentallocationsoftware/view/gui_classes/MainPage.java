@@ -20,6 +20,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
@@ -30,6 +31,7 @@ import studentallocationsoftware.model.group_data.Student;
 
 public class MainPage extends JPanel {
     private JList stuList;
+    private JScrollPane scrollPane;
     private DefaultListModel listModel;
     private JButton addStuBtn;
     private JButton removeStuBtn;
@@ -66,17 +68,20 @@ public class MainPage extends JPanel {
 
     public void init() {
         listModel = new DefaultListModel();
-        listModel.addElement("asdf");
+        listModel.addElement("Empty list");
+        
         
         stuList = new JList(listModel);
-        stuList.setPreferredSize(new Dimension(250, 500));
+        //stuList.setPreferredSize(new Dimension(250, 500));
         stuList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        scrollPane = new JScrollPane(stuList);
+        scrollPane.setPreferredSize(new Dimension(250, 500));
         
-        add(stuList);
+        add(scrollPane);
         
         
         //The code for the left hand side of the display - the button side.
-        //All placed into a jpanel - buttonPanel - which has gridbag constraints c2
+        //All placed into a jpanel - buttonPanel - which has gridbag constraints c
         buttonPanel = new JPanel(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
         c.gridx = 0; c.gridy = 0;

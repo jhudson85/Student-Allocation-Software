@@ -79,7 +79,7 @@ public class Group implements Comparable<Group>{
     }
 
     public int compareTo(Group other) {
-        int res = other.totalSkillPoints() - this.totalSkillPoints();
+        int res = this.totalSkillPoints() - other.totalSkillPoints();
         return res;
     }
     

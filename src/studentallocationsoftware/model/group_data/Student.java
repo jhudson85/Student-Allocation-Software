@@ -19,7 +19,7 @@ public class Student implements Comparable<Student>{
     private int classNumber;
 
     public int compareTo(Student other) {
-        int res = other.getSkillLevel() - this.getSkillLevel();
+        int res = this.getSkillLevel() - other.getSkillLevel();
         return res;
     }
 

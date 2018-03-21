@@ -89,8 +89,30 @@ public class Controller {
                 
                 //REMOVE this
                 //for(int i = 0; i < 30; i++){
+                //designer, reporter, tester and programmer
                 model.getClassList().get(selectedClass - 1).addStudent(student);
-                //}
+                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{true, false, true, false}, "test", "number 1", "00000001"));
+                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{true, false, true, false}, "test", "number 2", "00000001"));
+                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{false, false, false, true}, "test", "number 3", "00000001"));
+                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{false, true, true, false}, "test", "number 4", "00000001"));
+                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{false, false, false, true}, "test", "number 5", "00000001"));
+                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{false, true, false, false}, "test", "number 6", "00000001"));
+                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{false, true, false, false}, "test", "number 7", "00000001"));
+                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{false, false, false, true}, "test", "number 8", "00000001"));
+                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{false, false, true, false}, "test", "number 9", "00000001"));
+                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{true, true, true, false}, "test", "number 10", "00000001"));
+                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{true, false, false, true}, "test", "number 11", "00000001"));
+                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{false, true, false, false}, "test", "number 12", "00000001"));
+                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{true, false, true, false}, "test", "number 13", "00000001"));
+                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{false, false, true, true}, "test", "number 14", "00000001"));
+                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{true, true, true, true}, "test", "number 15", "00000001"));
+                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{true, true, true, true}, "test", "number 16", "00000001"));
+                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{false, true, true, false}, "test", "number 17", "00000001"));
+                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{false, true, true, true}, "test", "number 18", "00000001"));
+
+                
+
+//}
                 view.changeDisplay();
                 main.updateList(selectedClass - 1);
             }
@@ -138,6 +160,7 @@ public class Controller {
                     for(Student student:studentList){
                         //Attempt to put a student into a group that requires a skill they have.
                         boolean placed = groupByRequiredSkill(student, uniClass);
+                        //System.out.println(student.getLastName());
                         //If they are not put into a group put them into a group which has the least number of skilled members overall.
                         if(!placed){
                             Collections.sort(uniClass.getGroupList());
@@ -147,9 +170,10 @@ public class Controller {
                     
                     //Test data please remove
                     for(Group g: uniClass.getGroupList()){
-                        System.out.println("group number: " + g.getGroupNumber());
+                        System.out.println("\ngroup number: " + g.getGroupNumber() + "\n group stats: PROGRAMMERS: " + g.getProgramSkill() + " DESIGNERS: " + g.getDesignSkill() + " REPORTERS: " + g.getReportSkill() + " TESTERS: " + g.getTestingSkill() + "\ntotal skill: " + g.totalSkillPoints() + "\n");
                         for(Student s: g.getStudentList()){
-                            System.out.println(s.getFirstName() + " " + s.getLastName() + " - " + s.getStudentNumber());
+                            boolean[] prefs = s.getPreferences();
+                            System.out.println(s.getFirstName() + " " + s.getLastName() + " - " + s.getStudentNumber() + " [PROGRAMMING: " + prefs[3] + " :: DESIGN: " + prefs[0] + " :: REPORT: " + prefs[1] + " TESTING: " + prefs[2] + "]");
                         }
                     }
                 }
@@ -178,6 +202,7 @@ public class Controller {
                             }
                             else if(g.getReportSkill() == 0 && prefs[2]){
                                 g.addStudent(student);
+                                return true;
                             }
                         }
             return false;
