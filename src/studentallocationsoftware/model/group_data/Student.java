@@ -11,11 +11,13 @@ package studentallocationsoftware.model.group_data;
  */
 public class Student {
 
+    //reporter, 
     private boolean[] preferences;
     private String firstName;
     private String lastName;
     private String studentNumber;
     private int classNumber;
+    public static enum Skills {Programming, Reporing, Designing, Testing};
     
     public Student(boolean[] preferences, String firstName, String lastName, String studentNumber){
         this.preferences = preferences;
