@@ -155,7 +155,7 @@ public class StudentPage extends JPanel{
             }
         }
         else{
-            JOptionPane.showMessageDialog(this, "Please enter first name and last name with at least 1 letter and student number with 8 numbers.");
+            JOptionPane.showMessageDialog(this, "<HTML>Please enter first name and last name with at least 1 letter <br> and student number with 8 numbers.</HTML>");
         }
         return null;
     }

@@ -9,6 +9,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collections;
 import javax.swing.JFrame;
@@ -43,6 +49,7 @@ public class Controller {
         main.addStudentListener(new AddStudentListener());
         main.dropDownListener(new ClassSelectedListener());
         main.sortClassListener(new SortGroupListener());
+        main.exportClassListener(new SaveFileListener());
     }
     
     class AddClassListener implements ActionListener{
@@ -59,9 +66,10 @@ public class Controller {
     class AddStudentListener implements ActionListener{
         public void actionPerformed(ActionEvent e) {
             if(selectedClass != -1){
-            view.changeDisplay();
-            studentPanel = view.getStudentPage();
-            studentPanel.submitButtonListener(new SubmitStudentListener());
+                view.changeDisplay();
+                studentPanel = view.getStudentPage();
+                studentPanel.submitButtonListener(new SubmitStudentListener());
+                studentPanel.cancelButtonListener(new CancelButtonListener());
             }
             else{
                 JOptionPane.showMessageDialog(main, "Please select a class before adding students.");
@@ -114,7 +122,7 @@ public class Controller {
 
 //}
                 view.changeDisplay();
-                main.updateList(selectedClass - 1);
+                main.updateList(selectedClass - 1, false);
             }
         }
     }
@@ -126,7 +134,7 @@ public class Controller {
                 String[] splitName = className.split(" ");
                 if(Util.isNumber(splitName[1])){
                     selectedClass = Integer.valueOf(splitName[1]);
-                    main.updateList(selectedClass - 1);
+                    main.updateList(selectedClass - 1, false);
                 }
                 else{
                     selectedClass = -1;
@@ -137,7 +145,7 @@ public class Controller {
     
     class SortGroupListener implements ActionListener{
         public void actionPerformed(ActionEvent e) {
-            String input = JOptionPane.showInputDialog(main, "Please enter an appropriate group size (2-30)", "");
+            String input = JOptionPane.showInputDialog(main, "Please enter prefered group size", "");
             if(Util.isNumber(input)){
                 int groupSize = Integer.valueOf(input);
                 //Gets the currently selected class to be sorted
@@ -168,7 +176,9 @@ public class Controller {
                         }
                     }
                     
-                    //Test data please remove
+                    main.updateList(selectedClass - 1, true);
+                    
+                    //Test group to console output - possible use in export text file
                     for(Group g: uniClass.getGroupList()){
                         System.out.println("\ngroup number: " + g.getGroupNumber() + "\n group stats: PROGRAMMERS: " + g.getProgramSkill() + " DESIGNERS: " + g.getDesignSkill() + " REPORTERS: " + g.getReportSkill() + " TESTERS: " + g.getTestingSkill() + "\ntotal skill: " + g.totalSkillPoints() + "\n");
                         for(Student s: g.getStudentList()){
@@ -206,6 +216,42 @@ public class Controller {
                             }
                         }
             return false;
+        }
+    }
+    
+    class CancelButtonListener implements ActionListener{
+        public void actionPerformed(ActionEvent e) {
+            view.changeDisplay();
+        }
+    }
+    
+    class SaveFileListener implements ActionListener{
+        public void actionPerformed(ActionEvent e) {
+            String[] saveLocation = main.showSaveChooser();
+            if(saveLocation != null){
+                saveFile(saveLocation[0], saveLocation[1]);
+            }
+        }
+}
+    private void saveFile(String fileName, String dir){
+        File file = new File(dir + "\\" + fileName + ".txt");
+        UniversityClass uniClass = model.getClassList().get(selectedClass - 1);
+        String nl = System.getProperty("line.separator");
+        try{
+            FileOutputStream fos = new FileOutputStream(file);
+            OutputStreamWriter osw = new OutputStreamWriter(fos);
+            Writer w = new BufferedWriter(osw);
+            for(Group g: uniClass.getGroupList()){
+                        w.write(nl + "group number: " + g.getGroupNumber() + nl+ "group stats: PROGRAMMERS: " + g.getProgramSkill() + " DESIGNERS: " + g.getDesignSkill() + " REPORTERS: " + g.getReportSkill() + " TESTERS: " + g.getTestingSkill() + nl + "total skill: " + g.totalSkillPoints() + nl);
+                        for(Student s: g.getStudentList()){
+                            boolean[] prefs = s.getPreferences();
+                            w.write(s.getFirstName() + " " + s.getLastName() + " - " + s.getStudentNumber() + " [PROGRAMMING: " + prefs[3] + " :: DESIGN: " + prefs[0] + " :: REPORT: " + prefs[1] + " TESTING: " + prefs[2] + "]" + nl);
+                        }
+                    }
+            w.close();
+        }
+        catch(IOException ex){
+            ex.printStackTrace();
         }
     }
 }

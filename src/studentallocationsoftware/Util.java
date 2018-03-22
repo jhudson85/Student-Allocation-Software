@@ -29,7 +29,9 @@ public interface Util {
     */
         public static boolean isNumber(String s){
             char[] chars = s.toCharArray();
-            
+            if(s.length() == 0){
+                return false;
+            }
             for(char c: chars){
                 if(!Character.isDigit(c)){
                     return false;

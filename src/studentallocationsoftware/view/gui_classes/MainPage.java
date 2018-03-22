@@ -11,6 +11,15 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemListener;
+import java.io.BufferedInputStream;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -18,6 +27,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -26,11 +36,13 @@ import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import studentallocationsoftware.model.Model;
+import studentallocationsoftware.model.group_data.Group;
 import studentallocationsoftware.model.group_data.Student;
 
 
 public class MainPage extends JPanel {
     private JList stuList;
+    private JFileChooser fc;
     private JScrollPane scrollPane;
     private DefaultListModel listModel;
     private JButton addStuBtn;
@@ -57,18 +69,54 @@ public class MainPage extends JPanel {
         this.model = model;
     }
     
-    public void updateList(int classIndex){
+    public void updateList(int classIndex, boolean groupsAdded){
         listModel.removeAllElements();
-        for(Student s: model.getClassList().get(classIndex).getStudentList()){
-            listModel.addElement(s.getFirstName() + " " + s.getLastName() + " - " + s.getStudentNumber());
-            
+        ArrayList<Student> studentList = null;
+        //try-catch statement is designed to catch exceptions when first called - consider redesign to avoid?
+        try{
+            studentList = model.getClassList().get(classIndex).getStudentList();
+        }catch(Exception ex){
+  
+        }
+        
+        if(studentList != null && !groupsAdded){
+            for(Student s: studentList){
+                listModel.addElement(s.getFirstName() + " " + s.getLastName() + " - " + s.getStudentNumber());
+            }
+        }
+        else if(groupsAdded){
+            ArrayList<Group> groupList = model.getClassList().get(classIndex).getGroupList();
+            for(Group g: groupList){
+                listModel.addElement("Group number: " + g.getGroupNumber());
+                for(Student s: g.getStudentList()){
+                    listModel.addElement(s.getFirstName() + " " + s.getLastName() + " - " + s.getStudentNumber());
+                }
+                listModel.addElement("------------");
+            }
+        }
+        if(listModel.isEmpty()){
+            listModel.addElement("No Students added");
         }
     }
+    
+    public String[] showSaveChooser(){
+        fc = new JFileChooser();
+        String dir, fileName;
+        int returnVal = fc.showSaveDialog(this);
+        if(returnVal == JFileChooser.APPROVE_OPTION){
+            dir = fc.getCurrentDirectory().toString();
+            fileName = fc.getSelectedFile().getName();
+            System.out.println("Save " + dir + "\\" + fileName);
+            return new String[]{fileName, dir};
+        }
+        return null;
+    }
+    
     
 
     public void init() {
         listModel = new DefaultListModel();
-        listModel.addElement("Empty list");
+        updateList(0, false);
         
         
         stuList = new JList(listModel);
@@ -196,5 +244,4 @@ public class MainPage extends JPanel {
             boxModel.addElement("<Please create a class>");
         }
     }
-    
 }
