@@ -227,31 +227,45 @@ public class Controller {
     
     class SaveFileListener implements ActionListener{
         public void actionPerformed(ActionEvent e) {
-            String[] saveLocation = main.showSaveChooser();
-            if(saveLocation != null){
-                saveFile(saveLocation[0], saveLocation[1]);
+            if(selectedClass == -1){
+                JOptionPane.showMessageDialog(main, "Please select a class");
+            }
+            else{
+                String[] saveLocation = main.showSaveChooser();
+                if(saveLocation != null){
+                    saveFile(saveLocation[0], saveLocation[1]);
+                }
             }
         }
 }
     private void saveFile(String fileName, String dir){
-        File file = new File(dir + "\\" + fileName + ".txt");
-        UniversityClass uniClass = model.getClassList().get(selectedClass - 1);
-        String nl = System.getProperty("line.separator");
-        try{
-            FileOutputStream fos = new FileOutputStream(file);
-            OutputStreamWriter osw = new OutputStreamWriter(fos);
-            Writer w = new BufferedWriter(osw);
-            for(Group g: uniClass.getGroupList()){
-                        w.write(nl + "group number: " + g.getGroupNumber() + nl+ "group stats: PROGRAMMERS: " + g.getProgramSkill() + " DESIGNERS: " + g.getDesignSkill() + " REPORTERS: " + g.getReportSkill() + " TESTERS: " + g.getTestingSkill() + nl + "total skill: " + g.totalSkillPoints() + nl);
-                        for(Student s: g.getStudentList()){
-                            boolean[] prefs = s.getPreferences();
-                            w.write(s.getFirstName() + " " + s.getLastName() + " - " + s.getStudentNumber() + " [PROGRAMMING: " + prefs[3] + " :: DESIGN: " + prefs[0] + " :: REPORT: " + prefs[1] + " TESTING: " + prefs[2] + "]" + nl);
+            File file = new File(dir + "\\" + fileName + ".txt");
+            UniversityClass uniClass = model.getClassList().get(selectedClass - 1);
+            ArrayList<Group> groupList = uniClass.getGroupList();
+            String nl = System.getProperty("line.separator");
+            try{
+                FileOutputStream fos = new FileOutputStream(file);
+                OutputStreamWriter osw = new OutputStreamWriter(fos);
+                Writer w = new BufferedWriter(osw);
+                if(groupList.size() == 0){
+                    for(Student s: uniClass.getStudentList()){
+                                boolean[] prefs = s.getPreferences();
+                                w.write(s.getFirstName() + " " + s.getLastName() + " - " + s.getStudentNumber() + " [PROGRAMMING: " + prefs[3] + " :: DESIGN: " + prefs[0] + " :: REPORT: " + prefs[1] + " TESTING: " + prefs[2] + "]" + nl);
                         }
-                    }
-            w.close();
-        }
-        catch(IOException ex){
-            ex.printStackTrace();
-        }
+                }
+                else{
+                    for(Group g: groupList){
+                                w.write(nl + "group number: " + g.getGroupNumber() + nl+ "group stats: PROGRAMMERS: " + g.getProgramSkill() + " DESIGNERS: " + g.getDesignSkill() + " REPORTERS: " + g.getReportSkill() + " TESTERS: " + g.getTestingSkill() + nl + "total skill: " + g.totalSkillPoints() + nl);
+                                for(Student s: g.getStudentList()){
+                                    boolean[] prefs = s.getPreferences();
+                                    w.write(s.getFirstName() + " " + s.getLastName() + " - " + s.getStudentNumber() + " [PROGRAMMING: " + prefs[3] + " :: DESIGN: " + prefs[0] + " :: REPORT: " + prefs[1] + " TESTING: " + prefs[2] + "]" + nl);
+                                }
+                            }
+                }
+                w.close();
+            }
+            catch(IOException ex){
+                ex.printStackTrace();
+            }
     }
 }
