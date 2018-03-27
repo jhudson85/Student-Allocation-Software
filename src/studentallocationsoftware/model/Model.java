@@ -23,7 +23,7 @@ public class Model {
         classList.add(new UniversityClass(classList.size() + 1));
     }
     
-    public int getNumberClasses(){
-        return classList.size();
+    public ArrayList<UniversityClass> getClassList(){
+        return classList;
     }
 }

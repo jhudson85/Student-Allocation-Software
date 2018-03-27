@@ -10,6 +10,16 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemListener;
+import java.io.BufferedInputStream;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -17,17 +27,23 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import studentallocationsoftware.model.Model;
+import studentallocationsoftware.model.group_data.Group;
+import studentallocationsoftware.model.group_data.Student;
 
 
 public class MainPage extends JPanel {
     private JList stuList;
+    private JFileChooser fc;
+    private JScrollPane scrollPane;
     private DefaultListModel listModel;
     private JButton addStuBtn;
     private JButton removeStuBtn;
@@ -53,20 +69,67 @@ public class MainPage extends JPanel {
         this.model = model;
     }
     
+    public void updateList(int classIndex, boolean groupsAdded){
+        listModel.removeAllElements();
+        ArrayList<Student> studentList = null;
+        //try-catch statement is designed to catch exceptions when first called - consider redesign to avoid?
+        try{
+            studentList = model.getClassList().get(classIndex).getStudentList();
+        }catch(Exception ex){
+  
+        }
+        
+        if(studentList != null && !groupsAdded){
+            for(Student s: studentList){
+                listModel.addElement(s.getFirstName() + " " + s.getLastName() + " - " + s.getStudentNumber());
+            }
+        }
+        else if(groupsAdded){
+            ArrayList<Group> groupList = model.getClassList().get(classIndex).getGroupList();
+            for(Group g: groupList){
+                listModel.addElement("Group number: " + g.getGroupNumber());
+                for(Student s: g.getStudentList()){
+                    listModel.addElement(s.getFirstName() + " " + s.getLastName() + " - " + s.getStudentNumber());
+                }
+                listModel.addElement("------------");
+            }
+        }
+        if(listModel.isEmpty()){
+            listModel.addElement("No Students added");
+        }
+    }
+    
+    public String[] showSaveChooser(){
+        fc = new JFileChooser();
+        String dir, fileName;
+        int returnVal = fc.showSaveDialog(this);
+        if(returnVal == JFileChooser.APPROVE_OPTION){
+            dir = fc.getCurrentDirectory().toString();
+            fileName = fc.getSelectedFile().getName();
+            System.out.println("Save " + dir + "\\" + fileName);
+            return new String[]{fileName, dir};
+        }
+        return null;
+    }
+    
+    
 
     public void init() {
         listModel = new DefaultListModel();
-        listModel.addElement("asdf");
+        updateList(0, false);
+        
         
         stuList = new JList(listModel);
-        stuList.setPreferredSize(new Dimension(250, 500));
+        //stuList.setPreferredSize(new Dimension(250, 500));
         stuList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        scrollPane = new JScrollPane(stuList);
+        scrollPane.setPreferredSize(new Dimension(250, 500));
         
-        add(stuList);
+        add(scrollPane);
         
         
         //The code for the left hand side of the display - the button side.
-        //All placed into a jpanel - buttonPanel - which has gridbag constraints c2
+        //All placed into a jpanel - buttonPanel - which has gridbag constraints c
         buttonPanel = new JPanel(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
         c.gridx = 0; c.gridy = 0;
@@ -75,6 +138,7 @@ public class MainPage extends JPanel {
         
         boxModel = new DefaultComboBoxModel();
         dropDown = new JComboBox(boxModel);
+        boxModel.addElement("<Please create a class>");
         dropDown.setPreferredSize(defaultDimension);
         classDropDownPanel.add(dropDown);
         buttonPanel.add(classDropDownPanel, c);
@@ -164,14 +228,20 @@ public class MainPage extends JPanel {
         editStuBtn.addActionListener(listener);
     }
     
+    public void dropDownListener(ItemListener listener){
+        dropDown.addItemListener(listener);
+    }
+    
     
     public void updateDropDown(){
         boxModel.removeAllElements();
-        int numOfClasses = model.getNumberClasses();
+        int numOfClasses = model.getClassList().size();
         String[] classNames = new String[numOfClasses];
         for(int i = 1;i < numOfClasses + 1; i++){
             boxModel.addElement(new String("Class " + i));
         }
+        if(numOfClasses == 0){
+            boxModel.addElement("<Please create a class>");
+        }
     }
-    
 }

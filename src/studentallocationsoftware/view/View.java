@@ -7,6 +7,7 @@ package studentallocationsoftware.view;
 
 import java.awt.GridBagLayout;
 import java.awt.event.ActionListener;
+import javafx.stage.FileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import studentallocationsoftware.model.Model;
@@ -56,11 +57,18 @@ public class View {
         return studentPanel;
     }
     
-    public void addStudent(){
-        main.setVisible(false);
-        studentPanel = new StudentPage(model);
-        studentPanel.setVisible(true);
-        studentPanel.init();
-        frame.setContentPane(studentPanel);
+    public void changeDisplay(){
+        if(main.isVisible()){
+            main.setVisible(false);
+            studentPanel = new StudentPage(model);
+            studentPanel.setVisible(true);
+            studentPanel.init();
+            frame.setContentPane(studentPanel);
+        }
+        else{
+            main.setVisible(true);
+            studentPanel.setVisible(false);
+            frame.setContentPane(main);
+        }
     }
 }

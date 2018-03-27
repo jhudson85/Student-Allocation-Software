@@ -28,8 +28,13 @@ public interface Util {
     * Returns true if the string is a number and false if not
     */
         public static boolean isNumber(String s){
+            if(s == null){
+                return false;
+            }
             char[] chars = s.toCharArray();
-            
+            if(s.length() == 0){
+                return false;
+            }
             for(char c: chars){
                 if(!Character.isDigit(c)){
                     return false;
