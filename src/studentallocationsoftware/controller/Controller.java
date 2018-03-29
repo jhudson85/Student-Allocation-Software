@@ -51,6 +51,7 @@ public class Controller {
         this.frame = view.getFrame();
         this.main = view.getMainPage();
         main.addClassListener(new AddClassListener());
+        main.removeClassListener(new RemoveClassListener());
         main.addStudentListener(new AddStudentListener());
         main.dropDownListener(new ClassSelectedListener());
         main.sortClassListener(new SortGroupListener());
@@ -101,11 +102,8 @@ public class Controller {
                 String lastName = studentDetails[5];
                 String studentNumber = studentDetails[6];
                 
-                if(model.getClassList().get(selectedClass - 1).getStudent(studentNumber) != null){
-                    System.out.println("Student number taken");
-                }
-                
-                boolean[] preferences = {designer, reporter, tester, programmer};
+                if(model.getClassList().get(selectedClass - 1).getStudent(studentNumber) == null ||  (editMode && selectedStudent.getStudentNumber().equals(studentNumber))){
+                    boolean[] preferences = {designer, reporter, tester, programmer};
                 
                 if(!editMode){
                     Student student = new Student(preferences, firstName, lastName, studentNumber);
@@ -142,6 +140,12 @@ public class Controller {
 
                 view.changeDisplay();
                 main.updateList(selectedClass - 1, false);
+                }
+                else{
+                    JOptionPane.showMessageDialog(studentPanel, "The student number has already been used");
+                }
+                
+                
             }
         }
     }
@@ -346,5 +350,18 @@ public class Controller {
                 System.out.println("No student selected");
             }
         }
+    }
+    
+    class RemoveClassListener implements ActionListener{
+        public void actionPerformed(ActionEvent e) {
+            if(selectedClass != -1){
+                int opt = JOptionPane.showConfirmDialog(frame, "Are you sure you want to remove this class?", "Delete class", JOptionPane.YES_NO_OPTION);
+                if(opt == 0){
+                    model.getClassList().remove(selectedClass - 1);
+                    main.updateDropDown();
+                }
+            }
+        }
+        
     }
 }

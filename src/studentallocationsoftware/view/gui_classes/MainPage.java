@@ -201,7 +201,7 @@ public class MainPage extends JPanel {
     
     
     public void removeClassListener(ActionListener listener){
-        removeStuBtn.addActionListener(listener);
+        removeClassBtn.addActionListener(listener);
     }
     
     public void exportClassListener(ActionListener listener){
