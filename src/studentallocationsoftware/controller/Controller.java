@@ -19,6 +19,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import studentallocationsoftware.Util;
 import studentallocationsoftware.model.Model;
 import studentallocationsoftware.model.group_data.Group;
@@ -50,6 +53,7 @@ public class Controller {
         main.dropDownListener(new ClassSelectedListener());
         main.sortClassListener(new SortGroupListener());
         main.exportClassListener(new SaveFileListener());
+        main.listListener(new ListListener());
     }
     
     class AddClassListener implements ActionListener{
@@ -267,5 +271,15 @@ public class Controller {
             catch(IOException ex){
                 ex.printStackTrace();
             }
+    }
+    
+    class ListListener implements ListSelectionListener{
+
+        @Override
+        public void valueChanged(ListSelectionEvent e) {
+            ListSelectionModel lsm = (ListSelectionModel)e.getSource();
+
+        }
+        
     }
 }
