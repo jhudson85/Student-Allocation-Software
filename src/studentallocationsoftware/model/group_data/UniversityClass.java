@@ -48,6 +48,16 @@ public class UniversityClass{
         return groupList;
     }
     
+    public Student getStudent(String studentNumber){
+        for(Student s: studentList){
+            if(s.getStudentNumber().equals(studentNumber)){
+                return s;
+            }
+        }
+        return null;
+    }
+    
+    
     /*
     * Returns the skill with the lowest to the highest numbers from 0 to 4 respectively.
     */

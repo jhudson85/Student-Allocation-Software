@@ -42,6 +42,8 @@ public class Controller {
     MainPage main;
     StudentPage studentPanel;
     int selectedClass = -1;
+    Student selectedStudent;
+    boolean editMode;
     
     public Controller(Model model, View view){
         this.model = model;
@@ -54,6 +56,8 @@ public class Controller {
         main.sortClassListener(new SortGroupListener());
         main.exportClassListener(new SaveFileListener());
         main.listListener(new ListListener());
+        main.removeStudentListener(new RemoveStudentListener());
+        main.editStudentListener(new EditStudentListener());
     }
     
     class AddClassListener implements ActionListener{
@@ -71,6 +75,8 @@ public class Controller {
         public void actionPerformed(ActionEvent e) {
             if(selectedClass != -1){
                 view.changeDisplay();
+                
+                editMode = false;
                 studentPanel = view.getStudentPage();
                 studentPanel.submitButtonListener(new SubmitStudentListener());
                 studentPanel.cancelButtonListener(new CancelButtonListener());
@@ -95,36 +101,45 @@ public class Controller {
                 String lastName = studentDetails[5];
                 String studentNumber = studentDetails[6];
                 
+                if(model.getClassList().get(selectedClass - 1).getStudent(studentNumber) != null){
+                    System.out.println("Student number taken");
+                }
+                
                 boolean[] preferences = {designer, reporter, tester, programmer};
                 
-                Student student = new Student(preferences, firstName, lastName, studentNumber);
+                if(!editMode){
+                    Student student = new Student(preferences, firstName, lastName, studentNumber);
+                    model.getClassList().get(selectedClass - 1).addStudent(student);
+                    JOptionPane.showMessageDialog(studentPanel, "You have added a new student");
+                }
+                else{
+                    selectedStudent.setPreferences(preferences);
+                    selectedStudent.setFirstName(firstName);
+                    selectedStudent.setLastName(lastName);
+                    selectedStudent.setStudentNumber(studentNumber);
+                    JOptionPane.showMessageDialog(studentPanel, "You succesfully edited the student");
+                }
                 
-                //REMOVE this
-                //for(int i = 0; i < 30; i++){
-                //designer, reporter, tester and programmer
-                model.getClassList().get(selectedClass - 1).addStudent(student);
-                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{true, false, true, false}, "test", "number 1", "00000001"));
-                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{true, false, true, false}, "test", "number 2", "00000001"));
-                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{false, false, false, true}, "test", "number 3", "00000001"));
-                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{false, true, true, false}, "test", "number 4", "00000001"));
-                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{false, false, false, true}, "test", "number 5", "00000001"));
-                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{false, true, false, false}, "test", "number 6", "00000001"));
-                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{false, true, false, false}, "test", "number 7", "00000001"));
-                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{false, false, false, true}, "test", "number 8", "00000001"));
-                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{false, false, true, false}, "test", "number 9", "00000001"));
-                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{true, true, true, false}, "test", "number 10", "00000001"));
-                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{true, false, false, true}, "test", "number 11", "00000001"));
-                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{false, true, false, false}, "test", "number 12", "00000001"));
-                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{true, false, true, false}, "test", "number 13", "00000001"));
-                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{false, false, true, true}, "test", "number 14", "00000001"));
-                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{true, true, true, true}, "test", "number 15", "00000001"));
-                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{true, true, true, true}, "test", "number 16", "00000001"));
-                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{false, true, true, false}, "test", "number 17", "00000001"));
-                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{false, true, true, true}, "test", "number 18", "00000001"));
+                //Just test data for filling the list
+                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{true, false, true, false}, "test", "number1", "00000001"));
+                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{true, false, true, false}, "test", "number2", "00000001"));
+                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{false, false, false, true}, "test", "number3", "00000001"));
+                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{false, true, true, false}, "test", "number4", "00000001"));
+                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{false, false, false, true}, "test", "number5", "00000001"));
+                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{false, true, false, false}, "test", "number6", "00000001"));
+                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{false, true, false, false}, "test", "number7", "00000001"));
+                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{false, false, false, true}, "test", "number8", "00000001"));
+                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{false, false, true, false}, "test", "number9", "00000001"));
+                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{true, true, true, false}, "test", "number10", "00000001"));
+                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{true, false, false, true}, "test", "number11", "00000001"));
+                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{false, true, false, false}, "test", "number12", "00000001"));
+                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{true, false, true, false}, "test", "number13", "00000001"));
+                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{false, false, true, true}, "test", "number14", "00000001"));
+                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{true, true, true, true}, "test", "number15", "00000001"));
+                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{true, true, true, true}, "test", "number16", "00000001"));
+                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{false, true, true, false}, "test", "number17", "00000001"));
+                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{false, true, true, true}, "test", "number18", "00000001"));
 
-                
-
-//}
                 view.changeDisplay();
                 main.updateList(selectedClass - 1, false);
             }
@@ -278,8 +293,58 @@ public class Controller {
         @Override
         public void valueChanged(ListSelectionEvent e) {
             ListSelectionModel lsm = (ListSelectionModel)e.getSource();
-
+            boolean isAdjusting = e.getValueIsAdjusting();
+            int selectedIndex = -1;
+            String listData = "";
+            if(!isAdjusting){
+                selectedIndex = lsm.getMaxSelectionIndex();
+                if(selectedIndex != -1){
+                    listData = main.getListElement(selectedIndex);
+                    findStudent(listData);
+                }
+            }
+            
         }
-        
+    }
+    
+    private void findStudent(String text){
+        String[] splitText = text.split(" ");
+        if(splitText.length == 4){
+            String studentNumber = splitText[3];
+            System.out.println(studentNumber);
+            if(Util.isNumber(studentNumber)){
+                Student s = model.getClassList().get(selectedClass - 1).getStudent(studentNumber);
+                if(s != null){
+                    selectedStudent = s;
+                }else{
+                    System.out.println("Not a student");
+                }
+            }
+        }
+    }
+    
+    class RemoveStudentListener implements ActionListener{
+        public void actionPerformed(ActionEvent e) {
+            if(selectedStudent != null){
+                model.getClassList().get(selectedClass - 1).removeStudent(selectedStudent);
+                main.updateList(selectedClass - 1, false);
+            }
+        }
+}
+    
+    class EditStudentListener implements ActionListener{
+
+        public void actionPerformed(ActionEvent e) {
+            if(selectedStudent != null){
+                view.changeDisplay(selectedStudent);
+                
+                editMode = true;
+                studentPanel = view.getStudentPage();
+                studentPanel.submitButtonListener(new SubmitStudentListener());
+                studentPanel.cancelButtonListener(new CancelButtonListener());
+            }else{
+                System.out.println("No student selected");
+            }
+        }
     }
 }

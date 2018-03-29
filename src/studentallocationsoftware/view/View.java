@@ -11,6 +11,7 @@ import javafx.stage.FileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import studentallocationsoftware.model.Model;
+import studentallocationsoftware.model.group_data.Student;
 import studentallocationsoftware.view.gui_classes.MainPage;
 import studentallocationsoftware.view.gui_classes.StudentPage;
 
@@ -70,5 +71,13 @@ public class View {
             studentPanel.setVisible(false);
             frame.setContentPane(main);
         }
+    }
+    
+    public void changeDisplay(Student s){
+        main.setVisible(false);
+        studentPanel = new StudentPage(model, s);
+        studentPanel.setVisible(true);
+        studentPanel.init();
+        frame.setContentPane(studentPanel);
     }
 }

@@ -11,14 +11,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemListener;
-import java.io.BufferedInputStream;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -31,8 +23,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionListener;
@@ -60,6 +50,7 @@ public class MainPage extends JPanel {
     private JPanel buttonPanel;
     private Model model;
     private DefaultComboBoxModel boxModel;
+    ListSelectionModel listSelectionModel;
    
     
     private Dimension defaultDimension;
@@ -98,6 +89,10 @@ public class MainPage extends JPanel {
         if(listModel.isEmpty()){
             listModel.addElement("No Students added");
         }
+    }
+    
+    public String getListElement(int index){
+        return listModel.get(index).toString();
     }
     
     public String[] showSaveChooser(){
@@ -234,7 +229,8 @@ public class MainPage extends JPanel {
     }
     
     public void listListener(ListSelectionListener listener){
-        stuList.addListSelectionListener(listener);
+        listSelectionModel = stuList.getSelectionModel();
+        listSelectionModel.addListSelectionListener(listener);
     }
     
     public void updateDropDown(){
