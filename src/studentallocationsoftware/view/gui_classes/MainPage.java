@@ -35,6 +35,7 @@ import javax.swing.JTable;
 import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
+import javax.swing.event.ListSelectionListener;
 import studentallocationsoftware.model.Model;
 import studentallocationsoftware.model.group_data.Group;
 import studentallocationsoftware.model.group_data.Student;
@@ -232,6 +233,9 @@ public class MainPage extends JPanel {
         dropDown.addItemListener(listener);
     }
     
+    public void listListener(ListSelectionListener listener){
+        stuList.addListSelectionListener(listener);
+    }
     
     public void updateDropDown(){
         boxModel.removeAllElements();
