@@ -5,6 +5,8 @@
  */
 package studentallocationsoftware.view.gui_classes;
 
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
@@ -48,16 +50,18 @@ public class MainPage extends JPanel {
     private JPanel studentButtonPanel;
     private JPanel classButtonPanel;
     private JPanel classDropDownPanel;
-    private JPanel buttonPanel;
+    private JPanel rightHandPanel;
     private Model model;
     private DefaultComboBoxModel classList;
     ListSelectionModel listSelectionModel;
    
     
     private Dimension defaultDimension;
+    private Dimension buttonDimension;
     
     public MainPage(Model model){
         defaultDimension = new Dimension(250, 30);
+        buttonDimension = new Dimension(200, 100);
         this.model = model;
     }
 
@@ -75,9 +79,8 @@ public class MainPage extends JPanel {
         
         //The code for the right hand side of the display - the button side.
         //All placed into a jpanel - buttonPanel - which has gridbag constraints c
-        buttonPanel = new JPanel(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints();
-        c.gridx = 0; c.gridy = 0;
+        rightHandPanel = new JPanel();
+        rightHandPanel.setLayout(new BoxLayout(rightHandPanel, BoxLayout.Y_AXIS));
         
         classDropDownPanel = new JPanel();
         
@@ -86,17 +89,23 @@ public class MainPage extends JPanel {
         classDropDown = new JComboBox(classList);
         classDropDown.setPreferredSize(defaultDimension);
         classDropDownPanel.add(classDropDown);
-        buttonPanel.add(classDropDownPanel, c);
+        classDropDownPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        rightHandPanel.add(classDropDownPanel);
         
-        c.gridx = 0; c.gridy = 1;
         
         studentButtonPanel = new JPanel();
-        studentButtonPanel.setLayout(new BoxLayout(studentButtonPanel, BoxLayout.PAGE_AXIS));
+        BoxLayout bl = new BoxLayout(studentButtonPanel, BoxLayout.Y_AXIS);
+        studentButtonPanel.setLayout(bl);
         addStuBtn = new JButton("Add Student");
-        addStuBtn.setPreferredSize(defaultDimension);
+        addStuBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
+        addStuBtn.setMaximumSize(buttonDimension);
         removeStuBtn = new JButton("Remove Student");
-        removeStuBtn.setPreferredSize(defaultDimension);
+        removeStuBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
+        removeStuBtn.setMaximumSize(buttonDimension);
+        //removeStuBtn.setPreferredSize(defaultDimension);
         editStuBtn = new JButton("Edit Student");
+        editStuBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
+        editStuBtn.setMaximumSize(buttonDimension);
         
         studentButtonPanel.add(addStuBtn);
         studentButtonPanel.add(Box.createVerticalStrut(10));
@@ -107,22 +116,22 @@ public class MainPage extends JPanel {
         studentButtonPanel.setBorder(BorderFactory.createCompoundBorder(
             BorderFactory.createTitledBorder("Student Buttons"),
             BorderFactory.createEmptyBorder(10, 0, 10, 0)));
-        addStuBtn.setAlignmentX(SwingConstants.CENTER);
-        buttonPanel.add(studentButtonPanel, c);
+        //addStuBtn.setAlignmentX(SwingConstants.CENTER);
+        studentButtonPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        rightHandPanel.add(studentButtonPanel);
         
-        c.gridx = 0; c.gridy = 2;
         
         classButtonPanel = new JPanel();
         classButtonPanel.setLayout(new BoxLayout(classButtonPanel, BoxLayout.PAGE_AXIS));
         addClassBtn = new JButton("Add Class");
-        addClassBtn.setPreferredSize(defaultDimension);
+        //addClassBtn.setPreferredSize(defaultDimension);
         
         removeClassBtn = new JButton("Remove class");
         removeClassBtn.setPreferredSize(defaultDimension);
         exportBtn = new JButton("Export Class");
         exportBtn.setPreferredSize(defaultDimension);
         sortBtn = new JButton("Sort Class");
-        sortBtn.setPreferredSize(defaultDimension);
+        //sortBtn.setPreferredSize(defaultDimension);
         
         classButtonPanel.add(addClassBtn);
         classButtonPanel.add(Box.createVerticalStrut(10));
@@ -136,10 +145,12 @@ public class MainPage extends JPanel {
         classButtonPanel.setBorder(BorderFactory.createCompoundBorder(
             BorderFactory.createTitledBorder("Class Buttons"),
             BorderFactory.createEmptyBorder(10, 0, 10, 0)));
-        addStuBtn.setAlignmentX(SwingConstants.CENTER);
-        buttonPanel.add(classButtonPanel, c);
+        //addStuBtn.setAlignmentX(SwingConstants.CENTER);
+        classButtonPanel.setAlignmentX(Container.LEFT_ALIGNMENT);
+        rightHandPanel.add(classButtonPanel);
         
-        add(buttonPanel);
+        add(rightHandPanel);
+        rightHandPanel.setMaximumSize(defaultDimension);
     }
     
         public void updateList(int classIndex, boolean groupsAdded){
