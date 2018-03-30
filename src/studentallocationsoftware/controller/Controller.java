@@ -32,24 +32,28 @@ import studentallocationsoftware.view.gui_classes.MainPage;
 import studentallocationsoftware.view.gui_classes.StudentPage;
 
 /**
- *
- * @author Jack
+ * Class which contains the listener classes to allow the view
+ * and model to interact with each other.
+ * 
  */
 public class Controller {
-    Model model;
-    View view;
-    JFrame frame;
-    MainPage main;
-    StudentPage studentPanel;
-    int selectedClass = -1;
-    Student selectedStudent;
-    boolean editMode;
+    private Model model;
+    private View view;
+    private JFrame frame;
+    private MainPage main;
+    private StudentPage studentPanel;
+    private int selectedClassIndex = -1;
+    private UniversityClass selectedClass;
+    private Student selectedStudent;
+    private boolean editMode;
     
     public Controller(Model model, View view){
         this.model = model;
         this.view = view;
         this.frame = view.getFrame();
         this.main = view.getMainPage();
+        
+        //Add the listener instances to the main page to give buttons and lists functionality
         main.addClassListener(new AddClassListener());
         main.removeClassListener(new RemoveClassListener());
         main.addStudentListener(new AddStudentListener());
@@ -62,9 +66,9 @@ public class Controller {
     }
     
     class AddClassListener implements ActionListener{
-
-        public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(ActionEvent e){
             int opt = JOptionPane.showConfirmDialog(frame, "Are you sure you want to create a new class?", "Create new Class?", JOptionPane.YES_NO_OPTION);
+            // If user chooses yes, add a new class to the class list and update the display.
             if(opt == 0){
                 model.addNewClass();
                 main.updateDropDown();
@@ -73,11 +77,13 @@ public class Controller {
     }
     
     class AddStudentListener implements ActionListener{
-        public void actionPerformed(ActionEvent e) {
-            if(selectedClass != -1){
+        public void actionPerformed(ActionEvent e){
+            if(selectedClassIndex != -1){
+                //Change from the main to student display and set edit mode 
+                //to false because we're adding a new student not editing one
                 view.changeDisplay();
-                
                 editMode = false;
+                //Get the instance of the student page and add the listeners to that page
                 studentPanel = view.getStudentPage();
                 studentPanel.submitButtonListener(new SubmitStudentListener());
                 studentPanel.cancelButtonListener(new CancelButtonListener());
@@ -89,63 +95,37 @@ public class Controller {
     }
     
     class SubmitStudentListener implements ActionListener{
-        public void actionPerformed(ActionEvent e) {
-            String[] studentDetails;
-            studentDetails = studentPanel.submitStudent();
-            
-            if(studentDetails != null){
-                boolean designer = Boolean.valueOf(studentDetails[0]);
-                boolean reporter = Boolean.valueOf(studentDetails[1]);
-                boolean tester = Boolean.valueOf(studentDetails[2]);
-                boolean programmer = Boolean.valueOf(studentDetails[3]);
-                String firstName = studentDetails[4];
-                String lastName = studentDetails[5];
-                String studentNumber = studentDetails[6];
-                
-                if(model.getClassList().get(selectedClass - 1).getStudent(studentNumber) == null ||  (editMode && selectedStudent.getStudentNumber().equals(studentNumber))){
-                    boolean[] preferences = {designer, reporter, tester, programmer};
-                
-                if(!editMode){
+        public void actionPerformed(ActionEvent e){
+            //Retrive student details from the student page and store them in variables
+            String[] studentDetails = studentPanel.submitStudent();
+            boolean designer = Boolean.valueOf(studentDetails[0]);
+            boolean reporter = Boolean.valueOf(studentDetails[1]);
+            boolean tester = Boolean.valueOf(studentDetails[2]);
+            boolean programmer = Boolean.valueOf(studentDetails[3]);
+            String firstName = studentDetails[4];
+            String lastName = studentDetails[5];
+            String studentNumber = studentDetails[6];
+            boolean[] preferences = {designer, reporter, tester, programmer};
+
+            //Check that the student number isn't already taken
+            if (model.getClassList().get(selectedClassIndex).getStudent(studentNumber) == null || (editMode && selectedStudent.getStudentNumber().equals(studentNumber))){
+                //If adding a new student else if editing a current student
+                if (!editMode){
                     Student student = new Student(preferences, firstName, lastName, studentNumber);
-                    model.getClassList().get(selectedClass - 1).addStudent(student);
+                    selectedClass.addStudent(student);
                     JOptionPane.showMessageDialog(studentPanel, "You have added a new student");
-                }
-                else{
+                } else{
                     selectedStudent.setPreferences(preferences);
                     selectedStudent.setFirstName(firstName);
                     selectedStudent.setLastName(lastName);
                     selectedStudent.setStudentNumber(studentNumber);
                     JOptionPane.showMessageDialog(studentPanel, "You succesfully edited the student");
                 }
-                
-                //Just test data for filling the list
-                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{true, false, true, false}, "test", "number1", "00000001"));
-                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{true, false, true, false}, "test", "number2", "00000001"));
-                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{false, false, false, true}, "test", "number3", "00000001"));
-                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{false, true, true, false}, "test", "number4", "00000001"));
-                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{false, false, false, true}, "test", "number5", "00000001"));
-                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{false, true, false, false}, "test", "number6", "00000001"));
-                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{false, true, false, false}, "test", "number7", "00000001"));
-                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{false, false, false, true}, "test", "number8", "00000001"));
-                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{false, false, true, false}, "test", "number9", "00000001"));
-                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{true, true, true, false}, "test", "number10", "00000001"));
-                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{true, false, false, true}, "test", "number11", "00000001"));
-                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{false, true, false, false}, "test", "number12", "00000001"));
-                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{true, false, true, false}, "test", "number13", "00000001"));
-                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{false, false, true, true}, "test", "number14", "00000001"));
-                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{true, true, true, true}, "test", "number15", "00000001"));
-                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{true, true, true, true}, "test", "number16", "00000001"));
-                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{false, true, true, false}, "test", "number17", "00000001"));
-                model.getClassList().get(selectedClass - 1).addStudent(new Student(new boolean[]{false, true, true, true}, "test", "number18", "00000001"));
-
+                //Change display back to main screen and update student list
                 view.changeDisplay();
-                main.updateList(selectedClass - 1, false);
-                }
-                else{
-                    JOptionPane.showMessageDialog(studentPanel, "The student number has already been used");
-                }
-                
-                
+                main.updateList(selectedClassIndex, false);
+            } else {
+                JOptionPane.showMessageDialog(studentPanel, "The student number has already been used");
             }
         }
     }
@@ -156,11 +136,12 @@ public class Controller {
                 String className = e.getItem().toString();
                 String[] splitName = className.split(" ");
                 if(Util.isNumber(splitName[1])){
-                    selectedClass = Integer.valueOf(splitName[1]);
-                    main.updateList(selectedClass - 1, false);
+                    selectedClassIndex = Integer.valueOf(splitName[1]) - 1;
+                    selectedClass = model.getClassList().get(selectedClassIndex);
+                    main.updateList(selectedClassIndex, false);
                 }
                 else{
-                    selectedClass = -1;
+                    selectedClassIndex = -1;
                 }
             }
         }
@@ -171,44 +152,32 @@ public class Controller {
             String input = JOptionPane.showInputDialog(main, "Please enter prefered group size", "");
             if(Util.isNumber(input)){
                 int groupSize = Integer.valueOf(input);
-                //Gets the currently selected class to be sorted
-                UniversityClass uniClass = model.getClassList().get(selectedClass - 1);
-                //Gets the students in that class
-                ArrayList<Student> studentList = uniClass.getStudentList();
-                //Sort the students by the number total number of prefered skills that they have. (Ascending order)
+                //Gets the students in the class
+                ArrayList<Student> studentList = selectedClass.getStudentList();
+                //Sort the students by the total number of prefered skills that they have. (Ascending order)
                 Collections.sort(studentList);
-                
-                //Group sizes must be between one and less than or equal to half of the class size
+                //Group sizes must be greater than one and less than or equal to half of the class size
                 if(groupSize > 1 && groupSize <= studentList.size() / 2){
                     //Calculate the number of groups that needs to be created
                     int numOfGroups = studentList.size() / groupSize;
-                    
                     //Clear any existing groups and then create new groups
-                    uniClass.removeAllGroupElements();
+                    selectedClass.removeAllGroupElements();
                     for(int i = 0; i < numOfGroups; i++){
-                        uniClass.addGroup(new Group(i));
+                        selectedClass.addGroup(new Group(i));
                     }
                     for(Student student:studentList){
                         //Attempt to put a student into a group that requires a skill they have.
-                        boolean placed = groupByRequiredSkill(student, uniClass);
-                        //System.out.println(student.getLastName());
+                        boolean placed = groupByRequiredSkill(student, selectedClass);
                         //If they are not put into a group put them into a group which has the least number of skilled members overall.
                         if(!placed){
-                            Collections.sort(uniClass.getGroupList());
-                            uniClass.getGroupList().get(0).addStudent(student);
+                            Collections.sort(selectedClass.getGroupList());
+                            selectedClass.getGroupList().get(0).addStudent(student);
                         }
                     }
-                    
-                    main.updateList(selectedClass - 1, true);
-                    
-                    //Test group to console output - possible use in export text file
-                    for(Group g: uniClass.getGroupList()){
-                        System.out.println("\ngroup number: " + g.getGroupNumber() + "\n group stats: PROGRAMMERS: " + g.getProgramSkill() + " DESIGNERS: " + g.getDesignSkill() + " REPORTERS: " + g.getReportSkill() + " TESTERS: " + g.getTestingSkill() + "\ntotal skill: " + g.totalSkillPoints() + "\n");
-                        for(Student s: g.getStudentList()){
-                            boolean[] prefs = s.getPreferences();
-                            System.out.println(s.getFirstName() + " " + s.getLastName() + " - " + s.getStudentNumber() + " [PROGRAMMING: " + prefs[3] + " :: DESIGN: " + prefs[0] + " :: REPORT: " + prefs[1] + " TESTING: " + prefs[2] + "]");
-                        }
-                    }
+                    //Sort the groups by group number and
+                    //Update the class list specifying that the students are in groups
+                    selectedClass.getGroupList().sort((group1, group2) -> group1.getGroupNumber() - group2.getGroupNumber());
+                    main.updateList(selectedClassIndex, true);
                 }
             }
         }
@@ -233,7 +202,7 @@ public class Controller {
                                 g.addStudent(student);
                                 return true;
                             }
-                            else if(g.getReportSkill() == 0 && prefs[2]){
+                            else if(g.getTestingSkill() == 0 && prefs[2]){
                                 g.addStudent(student);
                                 return true;
                             }
@@ -250,57 +219,58 @@ public class Controller {
     
     class SaveFileListener implements ActionListener{
         public void actionPerformed(ActionEvent e) {
-            if(selectedClass == -1){
+            if(selectedClassIndex == -1){
                 JOptionPane.showMessageDialog(main, "Please select a class");
             }
             else{
+                //Show the user a save file location chooser and save the file passing through
+                //file name and directory
                 String[] saveLocation = main.showSaveChooser();
                 if(saveLocation != null){
                     saveFile(saveLocation[0], saveLocation[1]);
                 }
             }
         }
-}
+    }
     private void saveFile(String fileName, String dir){
-            File file = new File(dir + "\\" + fileName + ".txt");
-            UniversityClass uniClass = model.getClassList().get(selectedClass - 1);
-            ArrayList<Group> groupList = uniClass.getGroupList();
-            String nl = System.getProperty("line.separator");
-            try{
-                FileOutputStream fos = new FileOutputStream(file);
-                OutputStreamWriter osw = new OutputStreamWriter(fos);
-                Writer w = new BufferedWriter(osw);
-                if(groupList.size() == 0){
-                    for(Student s: uniClass.getStudentList()){
-                                boolean[] prefs = s.getPreferences();
-                                w.write(s.getFirstName() + " " + s.getLastName() + " - " + s.getStudentNumber() + " [PROGRAMMING: " + prefs[3] + " :: DESIGN: " + prefs[0] + " :: REPORT: " + prefs[1] + " TESTING: " + prefs[2] + "]" + nl);
-                        }
+        File file = new File(dir + "\\" + fileName + ".txt");
+        ArrayList<Group> groupList = selectedClass.getGroupList();
+        //Get new line separator for adding new lines to a text file
+        String nl = System.getProperty("line.separator");
+        try {
+            FileOutputStream fos = new FileOutputStream(file);
+            OutputStreamWriter osw = new OutputStreamWriter(fos);
+            Writer w = new BufferedWriter(osw);
+            //Possible change if I implement abstract class for groups and uni class
+            if (groupList.isEmpty()) {
+                for (Student s : selectedClass.getStudentList()) {
+                    boolean[] prefs = s.getPreferences();
+                    w.write(s.getFirstName() + " " + s.getLastName() + " - " + s.getStudentNumber() + " [PROGRAMMING: " + prefs[3] + " :: DESIGN: " + prefs[0] + " :: REPORT: " + prefs[1] + " TESTING: " + prefs[2] + "]" + nl);
                 }
-                else{
-                    for(Group g: groupList){
-                                w.write(nl + "group number: " + g.getGroupNumber() + nl+ "group stats: PROGRAMMERS: " + g.getProgramSkill() + " DESIGNERS: " + g.getDesignSkill() + " REPORTERS: " + g.getReportSkill() + " TESTERS: " + g.getTestingSkill() + nl + "total skill: " + g.totalSkillPoints() + nl);
-                                for(Student s: g.getStudentList()){
-                                    boolean[] prefs = s.getPreferences();
-                                    w.write(s.getFirstName() + " " + s.getLastName() + " - " + s.getStudentNumber() + " [PROGRAMMING: " + prefs[3] + " :: DESIGN: " + prefs[0] + " :: REPORT: " + prefs[1] + " TESTING: " + prefs[2] + "]" + nl);
-                                }
-                            }
+            } else {
+                for (Group g : groupList) {
+                    w.write(nl + "group number: " + g.getGroupNumber() + nl + "group stats: PROGRAMMERS: " + g.getProgramSkill() + " DESIGNERS: " + g.getDesignSkill() + " REPORTERS: " + g.getReportSkill() + " TESTERS: " + g.getTestingSkill() + nl + "total skill: " + g.totalSkillPoints() + nl);
+                    for (Student s : g.getStudentList()) {
+                        boolean[] prefs = s.getPreferences();
+                        w.write(s.getFirstName() + " " + s.getLastName() + " - " + s.getStudentNumber() + " [PROGRAMMING: " + prefs[3] + " :: DESIGN: " + prefs[0] + " :: REPORT: " + prefs[1] + " TESTING: " + prefs[2] + "]" + nl);
+                    }
                 }
-                w.close();
             }
-            catch(IOException ex){
-                ex.printStackTrace();
-            }
+            w.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
     
     class ListListener implements ListSelectionListener{
-
-        @Override
         public void valueChanged(ListSelectionEvent e) {
             ListSelectionModel lsm = (ListSelectionModel)e.getSource();
             boolean isAdjusting = e.getValueIsAdjusting();
             int selectedIndex = -1;
             String listData = "";
+            //Ensures selected item has already changed
             if(!isAdjusting){
+                //Find the student that the user clicked on
                 selectedIndex = lsm.getMaxSelectionIndex();
                 if(selectedIndex != -1){
                     listData = main.getListElement(selectedIndex);
@@ -315,13 +285,10 @@ public class Controller {
         String[] splitText = text.split(" ");
         if(splitText.length == 4){
             String studentNumber = splitText[3];
-            System.out.println(studentNumber);
             if(Util.isNumber(studentNumber)){
-                Student s = model.getClassList().get(selectedClass - 1).getStudent(studentNumber);
+                Student s = selectedClass.getStudent(studentNumber);
                 if(s != null){
                     selectedStudent = s;
-                }else{
-                    System.out.println("Not a student");
                 }
             }
         }
@@ -330,38 +297,33 @@ public class Controller {
     class RemoveStudentListener implements ActionListener{
         public void actionPerformed(ActionEvent e) {
             if(selectedStudent != null){
-                model.getClassList().get(selectedClass - 1).removeStudent(selectedStudent);
-                main.updateList(selectedClass - 1, false);
+                selectedClass.removeStudent(selectedStudent);
+                main.updateList(selectedClassIndex, false);
             }
         }
-}
+    }
     
     class EditStudentListener implements ActionListener{
-
         public void actionPerformed(ActionEvent e) {
             if(selectedStudent != null){
                 view.changeDisplay(selectedStudent);
-                
                 editMode = true;
                 studentPanel = view.getStudentPage();
                 studentPanel.submitButtonListener(new SubmitStudentListener());
                 studentPanel.cancelButtonListener(new CancelButtonListener());
-            }else{
-                System.out.println("No student selected");
             }
         }
     }
     
     class RemoveClassListener implements ActionListener{
         public void actionPerformed(ActionEvent e) {
-            if(selectedClass != -1){
+            if(selectedClassIndex != -1){
                 int opt = JOptionPane.showConfirmDialog(frame, "Are you sure you want to remove this class?", "Delete class", JOptionPane.YES_NO_OPTION);
                 if(opt == 0){
-                    model.getClassList().remove(selectedClass - 1);
+                    model.getClassList().remove(selectedClassIndex);
                     main.updateDropDown();
                 }
             }
         }
-        
     }
 }
