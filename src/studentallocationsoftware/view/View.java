@@ -20,30 +20,24 @@ import studentallocationsoftware.view.gui_classes.StudentPage;
  * @author Jack
  */
 public class View {
-    Model model;
-    JFrame frame;
-    MainPage main;
-    StudentPage studentPanel;
+    private Model model;
+    private JFrame frame;
+    private MainPage main;
+    private StudentPage studentPanel;
     
     public View(Model model){
         this.model = model;
-        
     }
     
     public void init(){
         frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
-        frame.setSize(500, 500);
-        
         frame.setTitle("Student Allocation Software");
-        GridBagLayout layout = new GridBagLayout();
-        frame.setLayout(layout);
         main = new MainPage(model);
         main.init();
         frame.setContentPane(main);
         frame.pack();
-        
     }
     
     public JFrame getFrame(){
@@ -58,6 +52,7 @@ public class View {
         return studentPanel;
     }
     
+    //Changes the display from main page to student page and vice-versa when called
     public void changeDisplay(){
         if(main.isVisible()){
             main.setVisible(false);
@@ -73,6 +68,7 @@ public class View {
         }
     }
     
+    //Load the student page with student details inserted
     public void changeDisplay(Student s){
         main.setVisible(false);
         studentPanel = new StudentPage(model, s);
