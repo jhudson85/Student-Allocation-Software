@@ -98,34 +98,36 @@ public class Controller {
         public void actionPerformed(ActionEvent e){
             //Retrive student details from the student page and store them in variables
             String[] studentDetails = studentPanel.submitStudent();
-            boolean designer = Boolean.valueOf(studentDetails[0]);
-            boolean reporter = Boolean.valueOf(studentDetails[1]);
-            boolean tester = Boolean.valueOf(studentDetails[2]);
-            boolean programmer = Boolean.valueOf(studentDetails[3]);
-            String firstName = studentDetails[4];
-            String lastName = studentDetails[5];
-            String studentNumber = studentDetails[6];
-            boolean[] preferences = {designer, reporter, tester, programmer};
+            if(studentDetails != null){
+                boolean designer = Boolean.valueOf(studentDetails[0]);
+                boolean reporter = Boolean.valueOf(studentDetails[1]);
+                boolean tester = Boolean.valueOf(studentDetails[2]);
+                boolean programmer = Boolean.valueOf(studentDetails[3]);
+                String firstName = studentDetails[4];
+                String lastName = studentDetails[5];
+                String studentNumber = studentDetails[6];
+                boolean[] preferences = {designer, reporter, tester, programmer};
 
-            //Check that the student number isn't already taken
-            if (model.getClassList().get(selectedClassIndex).getStudent(studentNumber) == null || (editMode && selectedStudent.getStudentNumber().equals(studentNumber))){
-                //If adding a new student else if editing a current student
-                if (!editMode){
-                    Student student = new Student(preferences, firstName, lastName, studentNumber);
-                    selectedClass.addStudent(student);
-                    JOptionPane.showMessageDialog(studentPanel, "You have added a new student");
-                } else{
-                    selectedStudent.setPreferences(preferences);
-                    selectedStudent.setFirstName(firstName);
-                    selectedStudent.setLastName(lastName);
-                    selectedStudent.setStudentNumber(studentNumber);
-                    JOptionPane.showMessageDialog(studentPanel, "You succesfully edited the student");
+                //Check that the student number isn't already taken
+                if (model.getClassList().get(selectedClassIndex).getStudent(studentNumber) == null || (editMode && selectedStudent.getStudentNumber().equals(studentNumber))){
+                    //If adding a new student else if editing a current student
+                    if (!editMode){
+                        Student student = new Student(preferences, firstName, lastName, studentNumber);
+                        selectedClass.addStudent(student);
+                        JOptionPane.showMessageDialog(studentPanel, "You have added a new student");
+                    } else{
+                        selectedStudent.setPreferences(preferences);
+                        selectedStudent.setFirstName(firstName);
+                        selectedStudent.setLastName(lastName);
+                        selectedStudent.setStudentNumber(studentNumber);
+                        JOptionPane.showMessageDialog(studentPanel, "You succesfully edited the student");
+                    }
+                    //Change display back to main screen and update student list
+                    view.changeDisplay();
+                    main.updateList(selectedClassIndex, false);
+                } else {
+                    JOptionPane.showMessageDialog(studentPanel, "The student number has already been used");
                 }
-                //Change display back to main screen and update student list
-                view.changeDisplay();
-                main.updateList(selectedClassIndex, false);
-            } else {
-                JOptionPane.showMessageDialog(studentPanel, "The student number has already been used");
             }
         }
     }
