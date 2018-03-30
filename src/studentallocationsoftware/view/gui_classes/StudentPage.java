@@ -71,7 +71,6 @@ public class StudentPage extends JPanel {
         if(preferences[1]) reportBox.doClick();
         if(preferences[2]) testingBox.doClick();
         if(preferences[3]) implementationBox.doClick();
-
     }
 
     public void init() {
@@ -112,7 +111,6 @@ public class StudentPage extends JPanel {
         studentPreferences = new JPanel(new GridBagLayout());
         JLabel designLbl = new JLabel("Design");
         addComponent(0,0,designLbl, studentPreferences);
-        
 
         addComponent(1,0,designBox,studentPreferences);
         
@@ -139,11 +137,10 @@ public class StudentPage extends JPanel {
 
         submitPanel = new JPanel();
         
-        submitBtn = new JButton("Submit");
-        submitPanel.add(submitBtn);
-        
         cancelBtn = new JButton("Cancel");
         submitPanel.add(cancelBtn);
+        submitBtn = new JButton("Submit");
+        submitPanel.add(submitBtn);
 
         add(submitPanel);
     }
