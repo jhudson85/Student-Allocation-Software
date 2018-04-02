@@ -17,21 +17,27 @@ public class Student implements Comparable<Student>{
     private String lastName;
     private String studentNumber;
     private int classNumber;
-
-    public int compareTo(Student other) {
-        int res = this.getSkillLevel() - other.getSkillLevel();
-        return res;
-    }
-
-
-    public static enum Skills {Programming, Reporing, Designing, Testing};
     
     public Student(boolean[] preferences, String firstName, String lastName, String studentNumber){
         this.preferences = preferences;
         this.firstName = firstName;
         this.lastName = lastName;
         this.studentNumber = studentNumber;
-        //this.classNumber = classNumber;
+    }
+    
+    public int compareTo(Student other) {
+        int res = this.getSkillLevel() - other.getSkillLevel();
+        return res;
+    }
+        
+    public int getSkillLevel(){
+        int count = 0;
+        for(int i = 0; i < preferences.length; i++){
+            if(preferences[i]){
+                count++;
+            }
+        }
+        return count;
     }
     
      public boolean[] getPreferences() {
@@ -72,15 +78,5 @@ public class Student implements Comparable<Student>{
 
     public void setClassNumber(int classNumber) {
         this.classNumber = classNumber;
-    }
-    
-    public int getSkillLevel(){
-        int count = 0;
-        for(int i = 0; i < preferences.length; i++){
-            if(preferences[i]){
-                count++;
-            }
-        }
-        return count;
     }
 }

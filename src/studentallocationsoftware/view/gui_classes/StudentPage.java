@@ -5,9 +5,12 @@
  */
 package studentallocationsoftware.view.gui_classes;
 
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionListener;
+import javafx.scene.text.Text;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -31,7 +34,6 @@ public class StudentPage extends JPanel {
     private JTextField firstNameField;
     private JTextField lastNameField;
     private JTextField studentNumberField;
-    private JLabel notificationLbl;
     private JPanel studentDetails;
     private JPanel studentPreferences;
     private JPanel submitPanel;
@@ -40,8 +42,9 @@ public class StudentPage extends JPanel {
     private JCheckBox designBox;
     private JCheckBox reportBox;
     private JCheckBox testingBox;
-    private JCheckBox implementationBox;
+    private JCheckBox programmingBox;
     private Model model;
+    private Font lblFont = new Font("TimesRoman", Font.BOLD, 13);
     private GridBagConstraints c;
     
     {
@@ -52,7 +55,7 @@ public class StudentPage extends JPanel {
         designBox = new JCheckBox();
         reportBox = new JCheckBox();
         testingBox = new JCheckBox();
-        implementationBox = new JCheckBox();
+        programmingBox = new JCheckBox();
     }
 
     public StudentPage(Model model) {
@@ -70,7 +73,7 @@ public class StudentPage extends JPanel {
         if(preferences[0]) designBox.doClick();
         if(preferences[1]) reportBox.doClick();
         if(preferences[2]) testingBox.doClick();
-        if(preferences[3]) implementationBox.doClick();
+        if(preferences[3]) programmingBox.doClick();
     }
 
     public void init() {
@@ -79,10 +82,11 @@ public class StudentPage extends JPanel {
         
         c = new GridBagConstraints();
         studentDetails = new JPanel(new GridBagLayout());
-        notificationLbl = new JLabel("<HTML>Please complete electronic form for each student in your class and <br> complete all sections for allocation, once completed, click submit.</HTML>", SwingConstants.CENTER);
+        JLabel notificationLbl = new JLabel("<HTML>Please complete electronic form for each student in your class and <br> complete all sections for allocation, once completed, click submit.</HTML>", SwingConstants.CENTER);
         c.gridwidth = 2;
         addComponent(0, 0, notificationLbl, studentDetails);
         
+        c.insets = new Insets(15,5,0,0);
         c.gridwidth = 1;
         JLabel firstNameLbl = new JLabel("First name *");
         addComponent(0,1,firstNameLbl, studentDetails);
@@ -110,11 +114,13 @@ public class StudentPage extends JPanel {
 
         studentPreferences = new JPanel(new GridBagLayout());
         JLabel designLbl = new JLabel("Design");
+        c.insets = new Insets(0,10,10,0);
         addComponent(0,0,designLbl, studentPreferences);
 
         addComponent(1,0,designBox,studentPreferences);
         
         JLabel testingLbl = new JLabel("Testing");
+        testingLbl.setFont(lblFont);
         addComponent(2,0,testingLbl,studentPreferences);
         
         addComponent(3,0,testingBox,studentPreferences);
@@ -124,10 +130,10 @@ public class StudentPage extends JPanel {
         
         addComponent(1,1,reportBox,studentPreferences);
         
-        JLabel implementationLbl = new JLabel("Implementation");
+        JLabel implementationLbl = new JLabel("Programming");
         addComponent(2,1,implementationLbl,studentPreferences);
         
-        addComponent(3,1,implementationBox, studentPreferences);
+        addComponent(3,1,programmingBox, studentPreferences);
 
         studentPreferences.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createTitledBorder("Student Preferences"),
@@ -157,6 +163,7 @@ public class StudentPage extends JPanel {
         c.gridx = x;
         c.gridy = y;
         panel.add(component, c);
+        component.setFont(lblFont);
     }
 
     public String[] submitStudent() {
@@ -169,8 +176,8 @@ public class StudentPage extends JPanel {
         if (Util.isNumber(studentNumber) && studentNumber.length() == 8) {
             if (Util.isAlpha(lastName) && lastName.length() > 0) {
                 if (Util.isAlpha(firstName) && firstName.length() > 0) {
-                    if (designBox.isSelected() || reportBox.isSelected() || testingBox.isSelected() || implementationBox.isSelected()) {
-                        return new String[]{Boolean.toString(designBox.isSelected()), Boolean.toString(reportBox.isSelected()), Boolean.toString(testingBox.isSelected()), Boolean.toString(implementationBox.isSelected()), firstName, lastName, studentNumber};
+                    if (designBox.isSelected() || reportBox.isSelected() || testingBox.isSelected() || programmingBox.isSelected()) {
+                        return new String[]{Boolean.toString(designBox.isSelected()), Boolean.toString(reportBox.isSelected()), Boolean.toString(testingBox.isSelected()), Boolean.toString(programmingBox.isSelected()), firstName, lastName, studentNumber};
                     }
                     else{
                         JOptionPane.showMessageDialog(this, "Please select at least one preference!");

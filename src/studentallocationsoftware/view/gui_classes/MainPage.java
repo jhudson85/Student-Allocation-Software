@@ -5,10 +5,10 @@
  */
 package studentallocationsoftware.view.gui_classes;
 
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
@@ -24,10 +24,9 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
-import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionListener;
 import studentallocationsoftware.model.Model;
-import studentallocationsoftware.model.group_data.Group;
+import studentallocationsoftware.model.group_data.StudentGroup;
 import studentallocationsoftware.model.group_data.Student;
 import studentallocationsoftware.model.group_data.UniversityClass;
 
@@ -48,101 +47,100 @@ public class MainPage extends JPanel {
     private JPanel studentButtonPanel;
     private JPanel classButtonPanel;
     private JPanel classDropDownPanel;
-    private JPanel buttonPanel;
+    private JPanel rightHandPanel;
     private Model model;
     private DefaultComboBoxModel classList;
     ListSelectionModel listSelectionModel;
    
     
-    private Dimension defaultDimension;
+    private final Dimension dropDownDimension = new Dimension(250, 30);
+    private final Dimension buttonDimension = new Dimension(180, 100);
     
     public MainPage(Model model){
-        defaultDimension = new Dimension(250, 30);
         this.model = model;
     }
 
     public void init() {
         setLayout(new FlowLayout());
         
+        //Creates the student list for the left hand side of the screen
         listModel = new DefaultListModel();
         updateList(-1, false);
         studentList = new JList(listModel);
         studentList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        
         scrollPane = new JScrollPane(studentList);
-        scrollPane.setPreferredSize(new Dimension(250, 500));
+        scrollPane.setPreferredSize(new Dimension(250, 400));
         add(scrollPane);
         
-        //The code for the right hand side of the display - the button side.
-        //All placed into a jpanel - buttonPanel - which has gridbag constraints c
-        buttonPanel = new JPanel(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints();
-        c.gridx = 0; c.gridy = 0;
+        //Creates the drop down list for the right hand side of the display
+        rightHandPanel = new JPanel();
+        rightHandPanel.setLayout(new BoxLayout(rightHandPanel, BoxLayout.Y_AXIS));
         
         classDropDownPanel = new JPanel();
-        
         classList = new DefaultComboBoxModel();
         classList.addElement("<Please create a class>");
         classDropDown = new JComboBox(classList);
-        classDropDown.setPreferredSize(defaultDimension);
+        classDropDown.setPreferredSize(dropDownDimension);
         classDropDownPanel.add(classDropDown);
-        buttonPanel.add(classDropDownPanel, c);
+        classDropDownPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        rightHandPanel.add(classDropDownPanel);
+        rightHandPanel.add(Box.createVerticalStrut(10));
         
-        c.gridx = 0; c.gridy = 1;
-        
+        //Creates the button list for the right hand side of the display
         studentButtonPanel = new JPanel();
-        studentButtonPanel.setLayout(new BoxLayout(studentButtonPanel, BoxLayout.PAGE_AXIS));
+        studentButtonPanel.setLayout(new BoxLayout(studentButtonPanel, BoxLayout.Y_AXIS));
         addStuBtn = new JButton("Add Student");
-        addStuBtn.setPreferredSize(defaultDimension);
         removeStuBtn = new JButton("Remove Student");
-        removeStuBtn.setPreferredSize(defaultDimension);
         editStuBtn = new JButton("Edit Student");
         
-        studentButtonPanel.add(addStuBtn);
+        addButton(addStuBtn, studentButtonPanel);
         studentButtonPanel.add(Box.createVerticalStrut(10));
-        studentButtonPanel.add(removeStuBtn);
+        addButton(removeStuBtn, studentButtonPanel);
         studentButtonPanel.add(Box.createVerticalStrut(10));
-        studentButtonPanel.add(editStuBtn);
+        addButton(editStuBtn, studentButtonPanel);
         
         studentButtonPanel.setBorder(BorderFactory.createCompoundBorder(
             BorderFactory.createTitledBorder("Student Buttons"),
             BorderFactory.createEmptyBorder(10, 0, 10, 0)));
-        addStuBtn.setAlignmentX(SwingConstants.CENTER);
-        buttonPanel.add(studentButtonPanel, c);
         
-        c.gridx = 0; c.gridy = 2;
+        studentButtonPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        rightHandPanel.add(studentButtonPanel);
+        rightHandPanel.add(Box.createVerticalStrut(10));
+        
         
         classButtonPanel = new JPanel();
-        classButtonPanel.setLayout(new BoxLayout(classButtonPanel, BoxLayout.PAGE_AXIS));
-        addClassBtn = new JButton("Add Class");
-        addClassBtn.setPreferredSize(defaultDimension);
-        
-        removeClassBtn = new JButton("Remove class");
-        removeClassBtn.setPreferredSize(defaultDimension);
-        exportBtn = new JButton("Export Class");
-        exportBtn.setPreferredSize(defaultDimension);
-        sortBtn = new JButton("Sort Class");
-        sortBtn.setPreferredSize(defaultDimension);
-        
-        classButtonPanel.add(addClassBtn);
-        classButtonPanel.add(Box.createVerticalStrut(10));
-        
-        classButtonPanel.add(removeClassBtn);
-        classButtonPanel.add(Box.createVerticalStrut(10));
-        classButtonPanel.add(exportBtn);
-        classButtonPanel.add(Box.createVerticalStrut(10));
-        classButtonPanel.add(sortBtn);
-        
+        classButtonPanel.setLayout(new BoxLayout(classButtonPanel, BoxLayout.Y_AXIS));
+        classButtonPanel.setAlignmentX(Container.LEFT_ALIGNMENT);
         classButtonPanel.setBorder(BorderFactory.createCompoundBorder(
             BorderFactory.createTitledBorder("Class Buttons"),
             BorderFactory.createEmptyBorder(10, 0, 10, 0)));
-        addStuBtn.setAlignmentX(SwingConstants.CENTER);
-        buttonPanel.add(classButtonPanel, c);
         
-        add(buttonPanel);
+        addClassBtn = new JButton("Add Class");     
+        removeClassBtn = new JButton("Remove class");
+        exportBtn = new JButton("Export Class");
+        sortBtn = new JButton("Sort Class");
+        
+        addButton(addClassBtn, classButtonPanel);
+        classButtonPanel.add(Box.createVerticalStrut(10));
+        addButton(removeClassBtn, classButtonPanel);
+        classButtonPanel.add(Box.createVerticalStrut(10));
+        addButton(exportBtn, classButtonPanel);        
+        classButtonPanel.add(Box.createVerticalStrut(10));
+        addButton(sortBtn, classButtonPanel);
+        
+        rightHandPanel.add(classButtonPanel);
+        
+        add(rightHandPanel);
     }
     
-        public void updateList(int classIndex, boolean groupsAdded){
+    private void addButton(JButton button, JPanel panel){
+        button.setAlignmentX(Component.CENTER_ALIGNMENT);
+        button.setMaximumSize(buttonDimension);
+        panel.add(button);
+    }
+    
+    //Updates the student list into a one or several groups of students
+    public void updateList(int classIndex, boolean groupsAdded){
         listModel.removeAllElements();
         UniversityClass uniClass;
         ArrayList<Student> studentList = null;
@@ -156,8 +154,8 @@ public class MainPage extends JPanel {
                 }
             }
             else if(groupsAdded){
-            ArrayList<Group> groupList = model.getClassList().get(classIndex).getGroupList();
-                for(Group g: groupList){
+                ArrayList<StudentGroup> groupList = model.getClassList().get(classIndex).getGroupList();
+                for(StudentGroup g: groupList){
                     listModel.addElement("Group number: " + g.getGroupNumber());
                     for(Student s: g.getStudentList()){
                         listModel.addElement(s.getFirstName() + " " + s.getLastName() + " - " + s.getStudentNumber());
@@ -187,6 +185,22 @@ public class MainPage extends JPanel {
         }
         return null;
     }
+    
+        public void updateDropDown(){
+        classList.removeAllElements();
+        int numOfClasses = model.getClassList().size();
+        String[] classNames = new String[numOfClasses];
+        for(int i = 1;i < numOfClasses + 1; i++){
+            classList.addElement(new String("Class " + i));
+        }
+        if(numOfClasses == 0){
+            classList.addElement("<Please create a class>");
+        }
+    }
+        
+        
+        
+        
     
     public void addClassListener(ActionListener listener){
         addClassBtn.addActionListener(listener);
@@ -223,17 +237,5 @@ public class MainPage extends JPanel {
     public void listListener(ListSelectionListener listener){
         listSelectionModel = studentList.getSelectionModel();
         listSelectionModel.addListSelectionListener(listener);
-    }
-    
-    public void updateDropDown(){
-        classList.removeAllElements();
-        int numOfClasses = model.getClassList().size();
-        String[] classNames = new String[numOfClasses];
-        for(int i = 1;i < numOfClasses + 1; i++){
-            classList.addElement(new String("Class " + i));
-        }
-        if(numOfClasses == 0){
-            classList.addElement("<Please create a class>");
-        }
     }
 }
