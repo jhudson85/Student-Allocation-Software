@@ -26,7 +26,7 @@ import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionListener;
 import studentallocationsoftware.model.Model;
-import studentallocationsoftware.model.group_data.Group;
+import studentallocationsoftware.model.group_data.StudentGroup;
 import studentallocationsoftware.model.group_data.Student;
 import studentallocationsoftware.model.group_data.UniversityClass;
 
@@ -154,8 +154,8 @@ public class MainPage extends JPanel {
                 }
             }
             else if(groupsAdded){
-                ArrayList<Group> groupList = model.getClassList().get(classIndex).getGroupList();
-                for(Group g: groupList){
+                ArrayList<StudentGroup> groupList = model.getClassList().get(classIndex).getGroupList();
+                for(StudentGroup g: groupList){
                     listModel.addElement("Group number: " + g.getGroupNumber());
                     for(Student s: g.getStudentList()){
                         listModel.addElement(s.getFirstName() + " " + s.getLastName() + " - " + s.getStudentNumber());

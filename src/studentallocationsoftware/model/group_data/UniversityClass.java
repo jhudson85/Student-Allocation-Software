@@ -11,10 +11,8 @@ import java.util.ArrayList;
  *
  * @author Jack
  */
-public class UniversityClass{
-    ArrayList<Group> groupList;
-    ArrayList<Student> studentList;
-    int groupSize;
+public class UniversityClass extends Group{
+    ArrayList<StudentGroup> groupList;
     int classNumber = 0;
     
     public UniversityClass(int classNumber){
@@ -27,15 +25,11 @@ public class UniversityClass{
         studentList.add(student);
     }
     
-    public void removeStudent(Student student){
-        studentList.remove(student);
-    }
-    
     public ArrayList<Student> getStudentList(){
         return studentList;
     }
     
-    public void addGroup(Group g){
+    public void addGroup(StudentGroup g){
         groupList.add(g);
     }
     
@@ -43,7 +37,7 @@ public class UniversityClass{
         groupList.clear();
     }
     
-    public ArrayList<Group> getGroupList(){
+    public ArrayList<StudentGroup> getGroupList(){
         return groupList;
     }
     
