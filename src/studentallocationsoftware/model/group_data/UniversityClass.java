@@ -7,18 +7,14 @@ package studentallocationsoftware.model.group_data;
 
 import java.util.ArrayList;
 
-/**
- *
- * @author Jack
- */
 public class UniversityClass extends Group{
     ArrayList<StudentGroup> groupList;
     int classNumber = 0;
     
     public UniversityClass(int classNumber){
         this.classNumber = classNumber;
-        this.studentList = new ArrayList();
-        this.groupList = new ArrayList();
+        studentList = new ArrayList();
+        groupList = new ArrayList();
     }
     
     public void addStudent(Student student){
