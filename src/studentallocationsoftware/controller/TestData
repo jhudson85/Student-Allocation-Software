@@ -1,0 +1,19 @@
+                //Just test data for filling the list
+                selectedClass.addStudent(new Student(new boolean[]{true, false, true, false}, "test", "number1", "00000001"));
+                selectedClass.addStudent(new Student(new boolean[]{true, false, true, false}, "test", "number2", "00000001"));
+                selectedClass.addStudent(new Student(new boolean[]{false, false, false, true}, "test", "number3", "00000001"));
+                selectedClass.addStudent(new Student(new boolean[]{false, true, true, false}, "test", "number4", "00000001"));
+                selectedClass.addStudent(new Student(new boolean[]{false, false, false, true}, "test", "number5", "00000001"));
+                selectedClass.addStudent(new Student(new boolean[]{false, true, false, false}, "test", "number6", "00000001"));
+                selectedClass.addStudent(new Student(new boolean[]{false, true, false, false}, "test", "number7", "00000001"));
+                selectedClass.addStudent(new Student(new boolean[]{false, false, false, true}, "test", "number8", "00000001"));
+                selectedClass.addStudent(new Student(new boolean[]{false, false, true, false}, "test", "number9", "00000001"));
+                selectedClass.addStudent(new Student(new boolean[]{true, true, true, false}, "test", "number10", "00000001"));
+                selectedClass.addStudent(new Student(new boolean[]{true, false, false, true}, "test", "number11", "00000001"));
+                selectedClass.addStudent(new Student(new boolean[]{false, true, false, false}, "test", "number12", "00000001"));
+                selectedClass.addStudent(new Student(new boolean[]{true, false, true, false}, "test", "number13", "00000001"));
+                selectedClass.addStudent(new Student(new boolean[]{false, false, true, true}, "test", "number14", "00000001"));
+                selectedClass.addStudent(new Student(new boolean[]{true, true, true, true}, "test", "number15", "00000001"));
+                selectedClass.addStudent(new Student(new boolean[]{true, true, true, true}, "test", "number16", "00000001"));
+                selectedClass.addStudent(new Student(new boolean[]{false, true, true, false}, "test", "number17", "00000001"));
+                selectedClass.addStudent(new Student(new boolean[]{false, true, true, true}, "test", "number18", "00000001"));
