@@ -45,4 +45,8 @@ public class UniversityClass extends Group{
         }
         return null;
     }
+    
+    public int getClassNumber(){
+        return classNumber;
+    }
 }

@@ -5,13 +5,14 @@
  */
 package studentallocationsoftware.model.group_data;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  *
  * @author JackDesktop
  */
-public abstract class Group {
+public abstract class Group implements Serializable{
     protected ArrayList<Student> studentList;
     
     public abstract void addStudent(Student s);

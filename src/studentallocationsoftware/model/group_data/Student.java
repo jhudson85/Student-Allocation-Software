@@ -5,11 +5,13 @@
  */
 package studentallocationsoftware.model.group_data;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Jack
  */
-public class Student implements Comparable<Student>{
+public class Student implements Comparable<Student>, Serializable{
     // A boolean array with values representing in order: designer, reporter, tester and programmer.
     private boolean[] preferences;
     private String firstName;

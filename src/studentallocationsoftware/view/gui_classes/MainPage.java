@@ -144,7 +144,6 @@ public class MainPage extends JPanel {
         listModel.removeAllElements();
         UniversityClass uniClass;
         ArrayList<Student> studentList = null;
-
         if(classIndex != -1){
             uniClass = model.getClassList().get(classIndex);
             studentList = uniClass.getStudentList();
@@ -190,8 +189,8 @@ public class MainPage extends JPanel {
         classList.removeAllElements();
         int numOfClasses = model.getClassList().size();
         String[] classNames = new String[numOfClasses];
-        for(int i = 1;i < numOfClasses + 1; i++){
-            classList.addElement(new String("Class " + i));
+        for(int i = 0;i < numOfClasses; i++){
+            classList.addElement(new String("Class " + model.getClassList().get(i).getClassNumber()));
         }
         if(numOfClasses == 0){
             classList.addElement("<Please create a class>");

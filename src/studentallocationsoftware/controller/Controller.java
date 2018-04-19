@@ -13,10 +13,13 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collections;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
@@ -42,7 +45,7 @@ public class Controller {
     private JFrame frame;
     private MainPage main;
     private StudentPage studentPanel;
-    private int selectedClassIndex = -1;
+    public int selectedClassIndex = -1;
     private UniversityClass selectedClass;
     private Student selectedStudent;
     private boolean editMode;
@@ -72,7 +75,7 @@ public class Controller {
             int opt = JOptionPane.showConfirmDialog(frame, "Are you sure you want to create a new class?", "Create new Class?", JOptionPane.YES_NO_OPTION);
             // If user chooses yes, add a new class to the class list and update the display.
             if(opt == 0){
-                model.addNewClass();
+                model.addUniversityClass();
                 main.updateDropDown();
             }
         }
@@ -124,6 +127,8 @@ public class Controller {
                         selectedStudent.setStudentNumber(studentNumber);
                         JOptionPane.showMessageDialog(studentPanel, "You succesfully edited the student");
                     }
+                    //Save the studentlist whenever a student is added or edited
+                    saveClassList();
                     //Change display back to main screen and update student list
                     view.changeDisplay();
                     main.updateList(selectedClassIndex, false);
@@ -138,10 +143,20 @@ public class Controller {
         public void itemStateChanged(ItemEvent e) {
             if(e.getStateChange() == ItemEvent.SELECTED){
                 String className = e.getItem().toString();
+                JComboBox box = (JComboBox)e.getSource();
+                
+                
                 String[] splitName = className.split(" ");
                 if(Util.isNumber(splitName[1])){
-                    selectedClassIndex = Integer.valueOf(splitName[1]) - 1;
-                    selectedClass = model.getClassList().get(selectedClassIndex);
+                    selectedClassIndex = Integer.valueOf(splitName[1]);
+                    for(UniversityClass uniClass: model.getClassList()){
+                        int classNumber = uniClass.getClassNumber();
+                        if(selectedClassIndex == classNumber){
+                            selectedClass = uniClass;
+                            selectedClassIndex = box.getSelectedIndex();
+                            }
+                        }
+                    }
                     main.updateList(selectedClassIndex, false);
                 }
                 else{
@@ -149,7 +164,7 @@ public class Controller {
                 }
             }
         }
-    }
+    
     
     class SortGroupListener implements ActionListener{
         public void actionPerformed(ActionEvent e) {
@@ -183,6 +198,8 @@ public class Controller {
                 }
             }
         }
+    
+    
         
         /*
         *Attempt to put a student into a group if that group does not have a student with that preference and
@@ -300,6 +317,9 @@ public class Controller {
             if(selectedStudent != null){
                 selectedClass.removeStudent(selectedStudent);
                 main.updateList(selectedClassIndex, false);
+                view.getMainPage().updateDropDown();
+                //Save new student list whenever a student is removed
+                saveClassList();
             }
         }
     }
@@ -321,6 +341,7 @@ public class Controller {
             if(selectedClassIndex != -1){
                 int opt = JOptionPane.showConfirmDialog(frame, "Are you sure you want to remove this class?", "Delete class", JOptionPane.YES_NO_OPTION);
                 if(opt == 0){
+                    deleteClassFile();
                     model.getClassList().remove(selectedClassIndex);
                     main.updateDropDown();
                 }
@@ -340,5 +361,28 @@ public class Controller {
         public void actionPerformed(ActionEvent e) {
             System.exit(0);
         }
+    }
+    
+    private void saveClassList(){
+         try{
+             ArrayList<UniversityClass> classList = model.getClassList();
+             File file = new File(System.getProperty("user.home") + File.separator + "/.sas");
+             file.mkdirs();
+             for(UniversityClass e : classList){
+                file = new File(System.getProperty("user.home") + File.separator + "/.sas/class" + e.getClassNumber());
+                FileOutputStream fileOut = new FileOutputStream(file);
+                ObjectOutputStream out = new ObjectOutputStream(fileOut);
+                out.writeObject(e);
+                out.close();
+                fileOut.close();
+         }
+      } catch (IOException ex){
+         ex.printStackTrace();
+      }
+    }
+    
+    private void deleteClassFile(){
+        File file = new File(System.getProperty("user.home") + File.separator + "/.sas/class" + selectedClass.getClassNumber());
+        file.delete();
     }
 }
